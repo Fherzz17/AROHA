@@ -1,4 +1,4 @@
-"""Vercel FastAPI entrypoint with comprehensive path resolution and ASGI routing."""
+"""Vercel FastAPI entrypoint with ASGI path restoration."""
 
 import os
 import sys
@@ -16,17 +16,18 @@ for p in [str(cwd), str(parent_dir), str(this_dir), "/var/task"]:
         sys.path.insert(0, p)
 
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
 from starlette.types import ASGIApp, Receive, Scope, Send
 
-load_error = None
 try:
-    # First try direct import from backend.app
     from backend.app import app as aroha_app
     base_app = aroha_app
-except Exception:
-    load_error = traceback.format_exc()
+except Exception as exc:
+    err_trace = traceback.format_exc()
     base_app = FastAPI()
+
+    @base_app.get("/api/health")
+    def health_fallback():
+        return {"error": err_trace}
 
 
 class VercelPathMiddleware:
@@ -39,21 +40,6 @@ class VercelPathMiddleware:
         if scope["type"] == "http":
             raw_headers = dict(scope.get("headers", []))
             headers_decoded = {k.decode("latin1"): v.decode("latin1") for k, v in raw_headers.items()}
-            
-            # Diagnostic endpoint
-            query = scope.get("query_string", b"").decode("latin1")
-            if "diag=1" in query or scope.get("path") in ["/api/diag", "/diag"]:
-                response = JSONResponse({
-                    "load_error": load_error,
-                    "sys_path": sys.path[:5],
-                    "cwd": str(cwd),
-                    "this_file": str(this_file),
-                    "original_scope_path": scope.get("path"),
-                    "headers": headers_decoded,
-                    "backend_exists": (cwd / "backend").exists() or (parent_dir / "backend").exists(),
-                })
-                await response(scope, receive, send)
-                return
 
             # Extract matched path from headers
             matched = (
