@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AROHA | AI-Powered Skill Intelligence Platform</title>
+  <meta name="description" content="AROHA is an AI-powered skill intelligence platform analysing Indian tech job-market data for in-demand skills, future trends, and personalised recommendations.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Left Navigation Sidebar -->
+    <aside class="sidebar">
+      <div class="brand-section">
+        <div class="brand-logo-icon" aria-label="AROHA logo">
+          <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+            <circle class="logo-outer-ring" cx="31" cy="32" r="25"></circle>
+            <path class="logo-inner-ring" d="M37.5 7.8A25 25 0 0 1 31 57"></path>
+            <path class="logo-a" d="M19 43 30.3 18h3.4L45 43M23.2 33.5h17.5"></path>
+          </svg>
+        </div>
+        <div class="brand-titles">
+          <h1>AROHA</h1>
+          <span class="badge-team">Team Syntax Society</span>
+        </div>
+      </div>
+
+      <ul class="nav-links">
+        <li class="nav-item active" data-view="home">
+          <span class="nav-glyph glyph-home" aria-hidden="true"></span>
+          <span>Home</span>
+        </li>
+        <li class="nav-item" data-view="dashboard">
+          <span class="nav-glyph glyph-dashboard" aria-hidden="true"></span>
+          <span>Dashboard</span>
+        </li>
+        <li class="nav-item" data-view="skills">
+          <span class="nav-glyph glyph-search" aria-hidden="true"></span>
+          <span>Skill Search</span>
+        </li>
+        <li class="nav-item" data-view="career">
+          <span class="nav-glyph glyph-career" aria-hidden="true"></span>
+          <span>Career Explorer</span>
+        </li>
+        <li class="nav-item" data-view="emerging">
+          <span class="nav-glyph glyph-emerging" aria-hidden="true"></span>
+          <span>Emerging Skills</span>
+        </li>
+        <li class="nav-item" data-view="recommend">
+          <span class="nav-glyph glyph-recommend" aria-hidden="true"></span>
+          <span>Recommendations</span>
+        </li>
+        <li class="nav-item" data-view="nlp">
+          <span class="nav-glyph glyph-analyzer" aria-hidden="true"></span>
+          <span>NLP Job Analyzer</span>
+        </li>
+        <li class="nav-item" data-view="about">
+          <span class="nav-glyph glyph-about" aria-hidden="true"></span>
+          <span>About & Methodology</span>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="footer-pill">
+          <div class="pulse-dot"></div>
+          <div>
+            <strong>Live Engine v1.0</strong>
+            <div style="font-size: 0.68rem; color: #94a3b8;">Hackathon Prototype MVP</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Viewport -->
+    <main class="main-viewport">
+      
+      <!-- Top Navbar -->
+      <header class="top-navbar">
+        <div class="top-navbar-left">
+          <div class="tagline-badge">
+            "Don't just prepare for today's jobs — prepare for tomorrow's skills."
+          </div>
+          <div class="role-workspace-note" id="role-workspace-note" aria-live="polite">Guest workspace · Explore AROHA</div>
+        </div>
+        <div class="top-navbar-right">
+          <div class="live-indicator">
+            <span class="pulse-dot"></span>
+            <span>Indian Tech Index: 1,800+ Jobs</span>
+          </div>
+
+          <!-- Auth Status & Profile Menu -->
+          <div class="nav-auth-container" id="nav-auth-container">
+            <button class="btn-nav-auth" id="btn-open-login" onclick="switchView('auth')">
+              <span>Sign In / Register</span>
+            </button>
+            <div class="user-profile-pill" id="user-profile-pill" style="display: none;" onclick="toggleUserDropdown(event)">
+              <div class="user-avatar-circle" id="nav-user-avatar">AS</div>
+              <div class="user-info-brief">
+                <span class="user-info-name" id="nav-user-name">Guest</span>
+                <span class="user-role-badge badge-role-student" id="nav-user-role-badge">Student</span>
+              </div>
+              <span style="font-size: 0.7rem; color: #94a3b8; margin-left: 2px;">▼</span>
+            </div>
+
+            <!-- Dropdown Menu -->
+            <div class="user-dropdown-menu" id="user-dropdown-menu">
+              <div class="dropdown-user-header">
+                <b id="dd-user-name">Aarav Sharma</b>
+                <small id="dd-user-email">student@skillpulse.in</small>
+                <div class="dropdown-user-meta" id="dd-user-org">IIT Bombay</div>
+              </div>
+              <button class="dropdown-item-btn" onclick="switchView('auth'); closeUserDropdown();">
+                <span>Account & Profile</span>
+              </button>
+              <button class="dropdown-item-btn" onclick="switchRoleDemoModal(); closeUserDropdown();">
+                <span>Switch Role / Quick Demo</span>
+              </button>
+              <button class="dropdown-item-btn logout" onclick="handleLogout()">
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Content -->
+      <div class="content-scroll">
+
+        <!-- ================= 0. HOME VIEW ================= -->
+        <section id="view-home" class="view-section active">
+          <div class="home-hero">
+            <div class="home-hero-copy">
+              <div class="home-eyebrow"><span></span> INDIA'S SKILL INTELLIGENCE SYSTEM</div>
+              <p class="home-overline">CAREER INTELLIGENCE FOR INDIA</p>
+              <h2 id="home-hero-title">Make your next<br>move <em>count.</em></h2>
+              <p class="home-intro" id="home-intro">Upload your resume, choose a target role, and get a clear, evidence-based view of the skills that will make the biggest difference.</p>
+              <div class="home-actions">
+                <button class="home-primary-action" id="home-primary-action" onclick="switchView('recommend')">Analyse my profile <span>↗</span></button>
+                <button class="home-text-action" id="home-secondary-action" onclick="switchView('dashboard')">Explore the market <span>→</span></button>
+              </div>
+              <div class="home-trust-row">
+                <div><strong>15.8K</strong><span>job signals<br>analysed</span></div>
+                <div><strong>85+</strong><span>skills<br>tracked</span></div>
+                <div><strong>1</strong><span>clear next<br>step at a time</span></div>
+              </div>
+            </div>
+
+            <div class="home-signal-stage" aria-label="Animated skill intelligence visual">
+              <div class="stage-grid"></div>
+              <div class="stage-ring ring-a"></div><div class="stage-ring ring-b"></div><div class="stage-ring ring-c"></div>
+              <div class="stage-line line-a"></div><div class="stage-line line-b"></div><div class="stage-line line-c"></div>
+              <div class="stage-point point-a"></div><div class="stage-point point-b"></div><div class="stage-point point-c"></div><div class="stage-point point-d"></div>
+              <div class="stage-orb"><span>AROHA</span><small>CAREER<br>SIGNAL</small></div>
+              <div class="stage-card stage-card-one"><small>SKILL VELOCITY</small><strong>+142<span>%</span></strong><p>Generative AI</p></div>
+              <div class="stage-card stage-card-two"><small>MARKET FIT</small><strong>88<span>/100</span></strong><p>Python · Strong</p></div>
+              <div class="stage-card stage-card-three"><small>NEXT MOVE</small><strong>ML</strong><p>High priority</p></div>
+              <div class="stage-caption">LIVE INTELLIGENCE<br>FOR REAL DECISIONS</div>
+            </div>
+          </div>
+
+          <div class="home-marquee" aria-label="AROHA capabilities">
+            <span>DEMAND SIGNALS</span><i>✳</i><span>CAREER CLARITY</span><i>✳</i><span>EXPLAINABLE AI</span><i>✳</i><span>PERSONALISED ROADMAPS</span><i>✳</i>
+          </div>
+
+          <div class="home-section-heading">
+            <p>WHAT AROHA MAKES POSSIBLE</p>
+            <h3>Less guessing.<br><em>Better next moves.</em></h3>
+          </div>
+          <div class="home-path-grid">
+            <article class="path-card path-card-rose"><span id="home-card-kicker-1">01 / EXPLORE</span><h4 id="home-card-title-1">Understand the<br>market.</h4><p id="home-card-copy-1">See demand, salary context and role coverage across the skills employers use today.</p><button id="home-card-action-1" onclick="switchView('dashboard')">Open dashboard <b>↗</b></button></article>
+            <article class="path-card path-card-light"><span id="home-card-kicker-2">02 / ASSESS</span><h4 id="home-card-title-2">See your<br>starting point.</h4><p id="home-card-copy-2">Bring in your resume or add skills yourself. AROHA turns them into a usable profile.</p><button id="home-card-action-2" onclick="switchView('recommend')">Import resume <b>↗</b></button></article>
+            <article class="path-card path-card-dark"><span id="home-card-kicker-3">03 / ACT</span><h4 id="home-card-title-3">Learn with<br>purpose.</h4><p id="home-card-copy-3">Identify the gaps that matter for your target role and build a focused learning roadmap.</p><button id="home-card-action-3" onclick="switchView('recommend')">Create roadmap <b>↗</b></button></article>
+          </div>
+        </section>
+
+        <!-- ================= 1. DASHBOARD VIEW ================= -->
+        <section id="view-dashboard" class="view-section">
+          <div class="section-header">
+            <h2>Market Intelligence Dashboard</h2>
+            <p>Aggregated skill demand, hiring patterns, and growth indicators across Indian tech hubs.</p>
+          </div>
+
+          <!-- Dynamic Role Welcome Banner -->
+          <div id="dashboard-welcome-banner" class="user-welcome-banner role-student" style="display: none;">
+            <div class="welcome-banner-text">
+              <h3 id="welcome-banner-title">Welcome back, <span id="welcome-user-name">Guest</span>!</h3>
+              <p id="welcome-banner-subtitle">Personalized learning roadmaps and skill gap analysis are calibrated for your target profile.</p>
+            </div>
+            <div class="welcome-banner-actions">
+              <button class="btn-primary btn-sm" id="welcome-banner-action-btn" onclick="handleWelcomeBannerAction()">Explore My Roadmap ↗</button>
+            </div>
+          </div>
+
+          <div class="market-hero" aria-label="AROHA market snapshot">
+            <div class="market-hero-copy">
+              <span class="hero-kicker"><i></i> LIVE MARKET SIGNAL</span>
+              <p class="market-hero-label">THE TALENT PULSE / Q4 2026</p>
+              <h3>See where<br><em>momentum</em> is moving.</h3>
+              <p class="market-hero-description">A living view of the capabilities reshaping India's technology teams—made for people choosing what to learn next.</p>
+              <button class="hero-explore-btn" onclick="switchView('skills')">Explore the signal <span>↗</span></button>
+            </div>
+            <div class="market-hero-art" aria-hidden="true">
+              <div class="orbit orbit-one"></div>
+              <div class="orbit orbit-two"></div>
+              <div class="orbit orbit-three"></div>
+              <div class="signal-core"><span>85</span><small>SKILLS<br>TRACKED</small></div>
+              <div class="signal-tag signal-tag-one"><b>+142%</b><span>GenAI growth</span></div>
+              <div class="signal-tag signal-tag-two"><b>1,800+</b><span>live roles</span></div>
+              <div class="star star-one"></div><div class="star star-two"></div><div class="star star-three"></div>
+            </div>
+          </div>
+
+          <!-- KPI Cards Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-title">
+                <span>Total Jobs Analyzed</span>
+                <span class="metric-mark mark-roles" aria-hidden="true"></span>
+              </div>
+              <div class="kpi-value" id="kpi-total-jobs">1,800</div>
+              <div class="kpi-subtitle">
+                <span class="growth-pill">Active Index</span>
+                <span>Bengaluru, Hyd, Pune, NCR</span>
+              </div>
+            </div>
+
+            <div class="kpi-card cyan">
+              <div class="kpi-title">
+                <span>Skills Identified</span>
+                <span class="metric-mark mark-skills" aria-hidden="true"></span>
+              </div>
+              <div class="kpi-value" id="kpi-total-skills">85</div>
+              <div class="kpi-subtitle">
+                <span>Standardized via NLP normalizer</span>
+              </div>
+            </div>
+
+            <div class="kpi-card emerald">
+              <div class="kpi-title">
+                <span>Fastest Growing Skill</span>
+                <span class="metric-mark mark-growth" aria-hidden="true"></span>
+              </div>
+              <div class="kpi-value" style="font-size: 1.5rem;" id="kpi-top-growth-name">Generative AI</div>
+              <div class="kpi-subtitle">
+                <span class="growth-pill" id="kpi-top-growth-pct">+142.5% YoY</span>
+                <span>Frontier Tech Surge</span>
+              </div>
+            </div>
+
+            <div class="kpi-card amber">
+              <div class="kpi-title">
+                <span>Benchmark Median CTC</span>
+                <span class="metric-mark mark-salary" aria-hidden="true"></span>
+              </div>
+              <div class="kpi-value">₹ 14.8 LPA</div>
+              <div class="kpi-subtitle">
+                <span>Tech Startups & GCCs</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="charts-grid-2">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Top In-Demand Skills</h3>
+                  <p class="card-subtitle">% of total job postings requiring competency</p>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="chart-top-skills"></canvas>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Industry Demand Spread</h3>
+                  <p class="card-subtitle">Job postings distributed across market verticals</p>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="chart-industries"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Skills Inspection -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Quick Skill Inspection</h3>
+                <p class="card-subtitle">Click any top skill to inspect market trend & forecasting</p>
+              </div>
+            </div>
+            <div id="dashboard-top-skills-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 2. SKILL SEARCH VIEW ================= -->
+        <section id="view-skills" class="view-section">
+          <div class="section-header">
+            <h2>Skill Intelligence & Forecasting</h2>
+            <p>Analyze individual skill demand scores, historical trajectories, and forecast projections.</p>
+          </div>
+
+          <!-- Search Input & Quick Chips -->
+          <div class="search-wrapper">
+            <span class="search-icon" aria-hidden="true"></span>
+            <input 
+              type="text" 
+              id="skill-search-input" 
+              class="search-input" 
+              placeholder="Search any skill (e.g., Python, SQL, AWS, Docker, Machine Learning, React, Generative AI)..."
+              list="skills-datalist"
+              value="Python"
+            />
+            <datalist id="skills-datalist"></datalist>
+
+            <div class="quick-chips-wrapper">
+              <span style="font-size: 0.8rem; color: #94a3b8; margin-right: 4px;">Quick Select:</span>
+              <button class="quick-chip active" data-skill="Python">Python</button>
+              <button class="quick-chip" data-skill="SQL">SQL</button>
+              <button class="quick-chip" data-skill="Java">Java</button>
+              <button class="quick-chip" data-skill="Machine Learning">Machine Learning</button>
+              <button class="quick-chip" data-skill="React">React</button>
+              <button class="quick-chip" data-skill="AWS">AWS</button>
+              <button class="quick-chip" data-skill="Docker">Docker</button>
+              <button class="quick-chip" data-skill="Generative AI">Generative AI</button>
+            </div>
+          </div>
+
+          <div id="skill-detail-loading" style="display: none; text-align: center; padding: 40px; color: #94a3b8;">
+            Analyzing market postings for skill...
+          </div>
+
+          <!-- Skill Detail Container -->
+          <div id="skill-detail-content">
+            <!-- Hero Card -->
+            <div class="skill-detail-hero">
+              <div>
+                <div class="hero-skill-category" id="skill-cat-header">Programming Languages</div>
+                <h3 class="hero-skill-name" id="skill-name-header">Python</h3>
+                <div style="display: flex; gap: 10px; align-items: center; margin-top: 8px;">
+                  <span class="growth-pill" id="skill-momentum-tag">Rapidly Growing</span>
+                  <span style="font-size: 0.85rem; color: #cbd5e1;" id="skill-growth-rate">+28% Annual CAGR</span>
+                </div>
+              </div>
+
+              <div class="hero-metrics">
+                <div class="hero-stat-block">
+                  <div class="hero-stat-val" id="skill-demand-score">92/100</div>
+                  <div class="hero-stat-lbl">Market Demand Score</div>
+                </div>
+                <div class="hero-stat-block">
+                  <div class="hero-stat-val" style="color: #06b6d4;" id="skill-jobs-count">740 Postings (41.1%)</div>
+                  <div class="hero-stat-lbl">Observed Presence</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Forecast Notice -->
+            <div class="forecast-badge-banner">
+              <span class="notice-mark" aria-hidden="true"></span>
+              <div>
+                <strong>Statistical Forecast Model:</strong> 
+                Historical quarters (2024-Q1 through 2025-Q3) represent <em>Observed Market Postings</em>. Dashed quarters represent <em>Statistical Momentum Projections</em>. Not a guaranteed prediction.
+              </div>
+            </div>
+
+            <!-- Trend Chart -->
+            <div class="card" style="margin-bottom: 24px;">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Demand Trajectory & Forecast (2024 — 2026)</h3>
+                  <p class="card-subtitle" id="skill-verdict-text">Mature Core: Standard high-volume industry requirement</p>
+                </div>
+              </div>
+              <div class="chart-container" style="height: 320px;">
+                <canvas id="chart-skill-trend"></canvas>
+              </div>
+            </div>
+
+            <!-- Co-occurrence & Industry Breakdown -->
+            <div class="charts-grid-2">
+              <div class="card">
+                <h3 class="card-title" style="margin-bottom: 12px;">Related Skills (Co-Occurrence)</h3>
+                <p class="card-subtitle" style="margin-bottom: 16px;">Skills most frequently required alongside this technology</p>
+                <div id="skill-related-tags"></div>
+              </div>
+
+              <div class="card">
+                <h3 class="card-title" style="margin-bottom: 12px;">Top Hiring Industries</h3>
+                <p class="card-subtitle" style="margin-bottom: 16px;">Sectors with the highest concentration of this requirement</p>
+                <div id="skill-industry-pills"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 3. CAREER EXPLORER VIEW ================= -->
+        <section id="view-career" class="view-section">
+          <div class="section-header">
+            <h2>Career & Job Role Explorer</h2>
+            <p>Understand expectations, salary ranges, and essential skill stacks for primary tech career paths.</p>
+          </div>
+
+          <!-- Role Selector Bar -->
+          <div class="card" style="margin-bottom: 24px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <span class="inline-section-mark" aria-hidden="true"></span>
+              <div>
+                <strong style="color: #ffffff; font-size: 1.05rem;">Select Target Career Role:</strong>
+                <p style="font-size: 0.8rem; color: #94a3b8;">Benchmarks calibrated for Indian GCCs, tech startups & product firms</p>
+              </div>
+            </div>
+            <select id="role-selector" style="background-color: var(--bg-dark); color: #ffffff; border: 1px solid var(--border-subtle); padding: 10px 18px; border-radius: var(--radius-md); font-size: 0.95rem; outline: none; min-width: 240px;">
+              <!-- Populated by JS -->
+            </select>
+          </div>
+
+          <!-- Role Banner -->
+          <div class="skill-detail-hero" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(99, 102, 241, 0.08) 100%); border-color: rgba(6, 182, 212, 0.3);">
+            <div>
+              <div class="hero-skill-category">Career Role Profile</div>
+              <h3 class="hero-skill-name" id="role-title-display">Data Scientist</h3>
+              <p style="color: #cbd5e1; font-size: 0.9rem; max-width: 600px; margin-top: 6px;" id="role-desc-display">
+                Designs predictive algorithms, probabilistic models, and deep analytics pipelines from complex data.
+              </p>
+            </div>
+            <div class="hero-metrics">
+              <div class="hero-stat-block">
+                <div class="hero-stat-val" style="color: #10b981;" id="role-salary-display">₹ 16.4 LPA Avg</div>
+                <div class="hero-stat-lbl">Benchmark Compensation</div>
+              </div>
+              <div class="hero-stat-block">
+                <div class="hero-stat-val" style="color: #a5b4fc;" id="role-jobs-display">245 Postings</div>
+                <div class="hero-stat-lbl">Active Indian Openings</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Required Skills Breakdown -->
+          <div class="charts-grid-2">
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom: 4px;">Core Non-Negotiable Skills</h3>
+              <p class="card-subtitle" style="margin-bottom: 14px;">Must-have competencies appearing in over 60% of postings</p>
+              <div id="role-core-skills" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+
+              <h3 class="card-title" style="margin-top: 24px; margin-bottom: 4px;">Complementary Tools & Stacks</h3>
+              <p class="card-subtitle" style="margin-bottom: 14px;">Secondary skills that distinguish strong candidates</p>
+              <div id="role-comp-skills" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title" style="margin-bottom: 4px;">Emerging & Future Edge</h3>
+              <p class="card-subtitle" style="margin-bottom: 14px;">Next-generation skills rapidly entering requirements</p>
+              <div id="role-emerging-skills" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;"></div>
+
+              <h3 class="card-title" style="margin-bottom: 4px;">Top Hiring Indian Hubs</h3>
+              <p class="card-subtitle" style="margin-bottom: 14px;">Geographic hiring density</p>
+              <div id="role-locations-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 4. EMERGING SKILLS VIEW ================= -->
+        <section id="view-emerging" class="view-section">
+          <div class="section-header">
+            <h2>Future & Emerging Skills Radar</h2>
+            <p>Competencies experiencing accelerated hiring velocity with high transformative leverage.</p>
+          </div>
+
+          <div class="forecast-badge-banner">
+            <span class="inline-section-mark" aria-hidden="true"></span>
+            <div>
+              <strong>Forecast / Market Acceleration Analysis:</strong>
+              Identified through semantic shift analysis across 2024-2026 hiring specifications. Growth rate indicates YoY vacancy surge in tech hubs.
+            </div>
+          </div>
+
+          <div class="emerging-grid" id="emerging-skills-grid">
+            <!-- Populated by JS -->
+          </div>
+        </section>
+
+        <!-- ================= 5. PERSONALIZED RECOMMENDATIONS VIEW ================= -->
+        <section id="view-recommend" class="view-section">
+          <div class="section-header">
+            <h2>Personalized Skill Gap Recommender</h2>
+            <p>Input your existing competencies against your dream role to receive an AI-tailored learning roadmap.</p>
+          </div>
+
+          <!-- Configuration Card -->
+          <div class="card" style="margin-bottom: 24px;">
+            <div class="resume-upload-panel">
+              <div class="resume-upload-copy">
+                <span class="resume-upload-kicker">NEW · PROFILE IMPORT</span>
+                <h3>Start with your resume.</h3>
+                <p>Upload a PDF, DOCX or TXT resume. AROHA reads it locally, detects your skills and builds your starting profile automatically.</p>
+              </div>
+              <label class="resume-dropzone" for="resume-upload-input" id="resume-dropzone">
+                <input id="resume-upload-input" type="file" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain">
+                <span class="resume-upload-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+                <strong>Upload your resume</strong>
+                <small>PDF, DOCX or TXT · up to 5 MB</small>
+              </label>
+            </div>
+            <div class="resume-upload-status" id="resume-upload-status" aria-live="polite"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px;">
+              <div>
+                <label style="font-size: 0.85rem; font-weight: 600; color: #ffffff; display: block; margin-bottom: 8px;">1. Target Career Role</label>
+                <select id="rec-target-role" style="width: 100%; background-color: var(--bg-dark); color: #ffffff; border: 1px solid var(--border-subtle); padding: 11px 14px; border-radius: var(--radius-md); font-size: 0.92rem; outline: none;">
+                  <!-- Populated by JS -->
+                </select>
+              </div>
+
+              <div>
+                <label style="font-size: 0.85rem; font-weight: 600; color: #ffffff; display: block; margin-bottom: 8px;">2. Your Current Skills</label>
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                  <input type="text" id="input-add-user-skill" placeholder="Add a skill (e.g., Python, SQL, Git)..." style="flex-grow: 1; background-color: var(--bg-dark); color: #ffffff; border: 1px solid var(--border-subtle); padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.9rem; outline: none;">
+                  <button id="btn-add-user-skill" class="btn-secondary">+ Add</button>
+                </div>
+                <div id="user-skills-chips" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+              </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+              <button id="btn-run-recommendation" class="btn-primary">
+                <span>Run Skill Gap Analysis</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Results Summary Row -->
+          <div class="charts-grid-2">
+            <!-- Left: Match metrics & missing skills -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Skill Gap Analysis</h3>
+                  <p class="card-subtitle">Compatibility against benchmark market postings</p>
+                </div>
+              </div>
+
+              <div style="background-color: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted);">Current Role Alignment</div>
+                  <div style="font-size: 2.2rem; font-weight: 800; color: #ffffff;" id="rec-match-score">65%</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted);">Market Readiness</div>
+                  <div style="font-size: 0.92rem; font-weight: 700;" id="rec-readiness-badge">Interview Ready</div>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 18px;">
+                <strong style="font-size: 0.85rem; color: #fca5a5; display: block; margin-bottom: 8px;">Missing Critical Core Skills:</strong>
+                <div id="rec-missing-core" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+              </div>
+
+              <div>
+                <strong style="font-size: 0.85rem; color: #6ee7b7; display: block; margin-bottom: 8px;">Missing Frontier / Emerging Skills:</strong>
+                <div id="rec-missing-emerging" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+              </div>
+            </div>
+
+            <!-- Right: Radar Chart Visualization -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Skill Pillar Benchmark Radar</h3>
+                  <p class="card-subtitle">Comparing profile strength across core engineering domains</p>
+                </div>
+              </div>
+              <div class="chart-container" style="height: 300px;">
+                <canvas id="chart-skill-gap-radar"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step-by-Step Learning Roadmap -->
+          <div class="card" style="margin-top: 24px;">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Recommended Step-by-Step Learning Path</h3>
+                <p class="card-subtitle">Sequential, high-ROI skill roadmap designed to close your skill gap</p>
+              </div>
+            </div>
+            <div class="roadmap-timeline" id="rec-roadmap-list">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 6. NLP JOB ANALYZER PLAYGROUND ================= -->
+        <section id="view-nlp" class="view-section">
+          <div class="section-header">
+            <h2>NLP Skill Extraction Playground</h2>
+            <p>Paste any real job description or resume snippet to test real-time skill entity recognition and normalization.</p>
+          </div>
+
+          <div class="card" style="margin-bottom: 24px;">
+            <label style="font-size: 0.85rem; font-weight: 600; color: #ffffff; display: block; margin-bottom: 8px;">
+              Job Description or Technical Profile Text:
+            </label>
+            <textarea id="jd-sample-input" class="nlp-textarea" placeholder="Paste any job description here...">Looking for a Python developer with experience in SQL, AWS, Docker and Machine Learning to build automated data pipelines.</textarea>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; flex-wrap: wrap; gap: 10px;">
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="font-size: 0.8rem; color: #94a3b8;">Load Demo Samples:</span>
+                <button class="quick-chip" onclick="loadSampleJD(0)">Python & ML</button>
+                <button class="quick-chip" onclick="loadSampleJD(1)">Data Science & GenAI</button>
+                <button class="quick-chip" onclick="loadSampleJD(2)">Fullstack Web</button>
+              </div>
+              <button id="btn-analyze-jd" class="btn-primary">
+                <span>Extract & Normalize Skills</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- NLP Extraction Results -->
+          <div id="nlp-results-container" class="card" style="display: none;">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Extraction Results</h3>
+                <p class="card-subtitle">Processed in <span id="nlp-proc-time" style="color: #10b981; font-weight: 700;">12 ms</span> via modular entity regex & alias normalizer</p>
+              </div>
+            </div>
+
+            <div class="charts-grid-2">
+              <div>
+                <strong style="font-size: 0.85rem; color: #a5b4fc; display: block; margin-bottom: 12px;">Identified Canonical Skills:</strong>
+                <div id="nlp-extracted-skills" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+              </div>
+
+              <div>
+                <strong style="font-size: 0.85rem; color: #a5b4fc; display: block; margin-bottom: 12px;">Role Match Prediction:</strong>
+                <div id="nlp-matched-roles"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 7. ABOUT & METHODOLOGY VIEW ================= -->
+        <section id="view-about" class="view-section">
+          <div class="section-header">
+            <h2>About AROHA</h2>
+            <p>Empowering Indian college graduates and job seekers with data-backed skill intelligence.</p>
+          </div>
+
+          <div class="card" style="margin-bottom: 24px;">
+            <h3 class="card-title" style="margin-bottom: 12px;">Product Vision & Philosophy</h3>
+            <p style="color: #cbd5e1; line-height: 1.7; margin-bottom: 16px;">
+              Traditional career guidance relies on outdated academic syllabi or anecdotal advice. 
+              <strong>AROHA</strong> bridges the academia-industry gap by converting raw Indian job-market signals into actionable, forward-looking skill intelligence.
+            </p>
+            <div style="background-color: rgba(99, 102, 241, 0.08); border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: var(--radius-sm); color: #c7d2fe; font-weight: 500;">
+              "Don't just prepare for today's jobs — prepare for tomorrow's skills."
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom: 24px;">
+            <h3 class="card-title" style="margin-bottom: 12px;">Core Intelligence Pipeline</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; text-align: center; margin-top: 14px;">
+              <div style="background-color: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                <div class="about-feature-mark" aria-hidden="true"></div>
+                <strong style="color: #ffffff; font-size: 0.9rem;">Job Market Ingestion</strong>
+                <p style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px;">Indian tech hubs & GCC postings</p>
+              </div>
+              <div style="background-color: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                <div class="about-feature-mark" aria-hidden="true"></div>
+                <strong style="color: #ffffff; font-size: 0.9rem;">Skill Extraction</strong>
+                <p style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px;">NLP normalizer & alias resolution</p>
+              </div>
+              <div style="background-color: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                <div class="about-feature-mark" aria-hidden="true"></div>
+                <strong style="color: #ffffff; font-size: 0.9rem;">Demand & Trend</strong>
+                <p style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px;">Quarterly CAGR & Co-occurrence</p>
+              </div>
+              <div style="background-color: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                <div class="about-feature-mark" aria-hidden="true"></div>
+                <strong style="color: #ffffff; font-size: 0.9rem;">Future Radar</strong>
+                <p style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px;">Separating observed vs forecast</p>
+              </div>
+              <div style="background-color: rgba(255,255,255,0.02); padding: 16px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                <div class="about-feature-mark" aria-hidden="true"></div>
+                <strong style="color: #ffffff; font-size: 0.9rem;">Personalized Roadmap</strong>
+                <p style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px;">Skill gap scoring & study plans</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-evidence-grid">
+            <div class="card evidence-card">
+              <span class="evidence-kicker">EVIDENCE LABELS</span>
+              <h3 class="card-title">What the result means</h3>
+              <div class="evidence-row"><b class="evidence-badge observed">OBSERVED</b><span>Directly measured from supplied job records.</span></div>
+              <div class="evidence-row"><b class="evidence-badge model">MODEL OUTPUT</b><span>Generated by a validated supervised model.</span></div>
+              <div class="evidence-row"><b class="evidence-badge signal">ANALYTICAL SIGNAL</b><span>Derived score or association, not causation.</span></div>
+              <div class="evidence-row"><b class="evidence-badge projected">PROJECTED</b><span>Forward-looking indicator; not a guarantee.</span></div>
+            </div>
+            <div class="card evidence-card">
+              <span class="evidence-kicker">DATA QUALITY AUDIT</span>
+              <h3 class="card-title">Prepared for decisions</h3>
+              <p class="evidence-copy">Salary brackets are converted to midpoint LPA values. Experience text is parsed into numerical bands. Skill aliases are mapped to canonical names before aggregation.</p>
+              <div class="audit-metrics"><div><strong>15,841</strong><span>analytics jobs</span></div><div><strong>1,602</strong><span>data-science jobs</span></div><div><strong>24</strong><span>automated checks</span></div></div>
+            </div>
+          </div>
+
+          <div class="card limitations-card">
+            <span class="evidence-kicker">RESPONSIBLE USE</span>
+            <h3 class="card-title">Known limitations</h3>
+            <p class="evidence-copy">AROHA supports decisions; it does not replace human judgement. Salary relationships are observational. Frontier signals are projections because the supplied market snapshot does not contain reliable longitudinal dates. Model results should be interpreted with their sample sizes and validation metrics.</p>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title" style="margin-bottom: 12px;">Hackathon Project Credits & Compliance</h3>
+            <p style="color: #cbd5e1; font-size: 0.88rem; line-height: 1.6; margin-bottom: 12px;">
+              <strong>Team:</strong> Syntax Society<br>
+              <strong>Date:</strong> 7 October 2026<br>
+              <strong>Architecture:</strong> Python 3.12, FastAPI, SQLite, Scikit-learn, Vanilla CSS Glassmorphism, Chart.js<br>
+              <strong>Data Notice:</strong> Uses a structured, 1,800+ record benchmark dataset representing Indian tech hubs (Bengaluru, Hyderabad, Pune, Gurugram, Mumbai). Forecast values are clearly labeled as statistical momentum projections.
+            </p>
+          </div>
+        </section>
+
+        <!-- ================= 8. AUTHENTICATION & LOGIN VIEW ================= -->
+        <section id="view-auth" class="view-section">
+          <div class="auth-view-wrapper">
+            <div class="auth-card">
+              
+              <!-- State A: When Already Logged In -->
+              <div id="auth-logged-in-view" style="display: none;">
+                <div class="auth-logged-in-card">
+                  <div class="logged-in-avatar-large role-student" id="card-avatar-large">AS</div>
+                  <h2 class="logged-in-name" id="card-user-name">Aarav Sharma</h2>
+                  <span class="logged-in-role-tag badge-role-student" id="card-role-tag">Student Account</span>
+                  
+                  <div class="logged-in-details-grid">
+                    <div class="logged-in-detail-item">
+                      <small>Email Address</small>
+                      <strong id="card-user-email">student@skillpulse.in</strong>
+                    </div>
+                    <div class="logged-in-detail-item">
+                      <small>Organization / College</small>
+                      <strong id="card-user-org">IIT Bombay</strong>
+                    </div>
+                    <div class="logged-in-detail-item">
+                      <small>Target Focus / Domain</small>
+                      <strong id="card-user-target">Data Scientist</strong>
+                    </div>
+                    <div class="logged-in-detail-item">
+                      <small>Authentication Provider</small>
+                      <strong id="card-user-provider">Local Account</strong>
+                    </div>
+                  </div>
+
+                  <div class="logged-in-actions">
+                    <button class="btn-primary" onclick="switchView('dashboard')">
+                      <span>Return to Dashboard</span>
+                    </button>
+                    <button class="btn-secondary" onclick="switchRoleDemoModal()">
+                      <span>Switch Role / Demo</span>
+                    </button>
+                    <button class="btn-secondary" style="border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;" onclick="handleLogout()">
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- State B: Login & Registration Forms -->
+              <div id="auth-forms-view">
+                <div class="auth-header">
+                  <span class="auth-kicker">SECURE PLATFORM ACCESS</span>
+                  <h2>Sign In or Create Account</h2>
+                  <p>Choose your role as a <strong>Student</strong>, <strong>Recruiter</strong>, or <strong>Educator / Other</strong> to unlock customized intelligence and market benchmarking.</p>
+                </div>
+
+                <!-- Mode Switcher Tabs -->
+                <div class="auth-mode-pills">
+                  <button type="button" class="auth-mode-btn active" id="btn-mode-signin" onclick="setAuthMode('signin')">
+                    Sign In to Account
+                  </button>
+                  <button type="button" class="auth-mode-btn" id="btn-mode-signup" onclick="setAuthMode('signup')">
+                    Create New Account
+                  </button>
+                </div>
+
+                <!-- Role Selector Cards -->
+                <div class="role-picker-container">
+                  <span class="role-picker-label">Select Your Role Profile:</span>
+                  <div class="role-cards-grid">
+                    <div class="role-card active role-student" id="role-card-student" onclick="selectAuthRole('student')">
+                      <span class="role-card-badge">S</span>
+                      <div class="role-card-title">
+                        <span>Student / Learner</span>
+                        <span class="role-card-check">✓</span>
+                      </div>
+                      <p class="role-card-desc">Skill gap scoring, targeted learning roadmaps & career role navigation.</p>
+                    </div>
+
+                    <div class="role-card role-recruiter" id="role-card-recruiter" onclick="selectAuthRole('recruiter')">
+                      <span class="role-card-badge">R</span>
+                      <div class="role-card-title">
+                        <span>Tech Recruiter</span>
+                        <span class="role-card-check">✓</span>
+                      </div>
+                      <p class="role-card-desc">Market talent pool supply, compensation benchmarks & skill trends.</p>
+                    </div>
+
+                    <div class="role-card role-other" id="role-card-other" onclick="selectAuthRole('other')">
+                      <span class="role-card-badge">E</span>
+                      <div class="role-card-title">
+                        <span>Other / Educator</span>
+                        <span class="role-card-check">✓</span>
+                      </div>
+                      <p class="role-card-desc">Academic curriculum alignment, industry trend analysis & macro forecasts.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dynamic Role Context Message -->
+                <div class="role-context-hint" id="role-context-hint">
+                  <span class="inline-section-mark" aria-hidden="true"></span>
+                  <span id="role-context-text">Logging in as <strong>Student</strong>: You will get custom learning path recommendations and skill gap scoring.</span>
+                </div>
+
+                <!-- Feedback Alert Container -->
+                <div class="auth-alert" id="auth-alert"></div>
+
+                <!-- 1. SIGN IN FORM -->
+                <form id="form-signin" onsubmit="handleSignInSubmit(event)">
+                  <div class="auth-form-group">
+                    <label for="signin-email">Email Address or Username</label>
+                    <input type="email" id="signin-email" class="auth-input" placeholder="e.g., student@skillpulse.in" required autocomplete="username">
+                  </div>
+
+                  <div class="auth-form-group">
+                    <label for="signin-password">Password</label>
+                    <div class="password-input-wrap">
+                      <input type="password" id="signin-password" class="auth-input" placeholder="Enter your account password" required autocomplete="current-password">
+                      <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility('signin-password', this)" title="Show/Hide password">Show</button>
+                    </div>
+                  </div>
+
+                  <div class="auth-extra-row">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                      <input type="checkbox" id="signin-remember" checked> Remember this device
+                    </label>
+                    <a onclick="openForgotPasswordModal()">Forgot password?</a>
+                  </div>
+
+                  <button type="submit" class="btn-auth-submit" id="btn-submit-signin">
+                    <span id="signin-btn-text">Sign In as Student ➔</span>
+                  </button>
+                </form>
+
+                <!-- 2. SIGN UP FORM -->
+                <form id="form-signup" style="display: none;" onsubmit="handleSignUpSubmit(event)">
+                  <div class="auth-form-grid">
+                    <div class="auth-form-group form-full-width">
+                      <label for="signup-name">Full Name</label>
+                      <input type="text" id="signup-name" class="auth-input" placeholder="e.g., Arjun Sharma" required autocomplete="name">
+                    </div>
+
+                    <div class="auth-form-group form-full-width">
+                      <label for="signup-email">Email Address</label>
+                      <input type="email" id="signup-email" class="auth-input" placeholder="e.g., arjun@university.edu.in" required autocomplete="email">
+                    </div>
+
+                    <!-- Role-Specific Fields Container -->
+                    <div id="signup-role-fields" class="form-full-width auth-form-grid" style="margin: 0; padding: 0;">
+                      <!-- Populated dynamically by JS according to selected role -->
+                    </div>
+
+                    <div class="auth-form-group">
+                      <label for="signup-password">Password (min 6 characters)</label>
+                      <div class="password-input-wrap">
+                        <input type="password" id="signup-password" class="auth-input" placeholder="Create strong password" required autocomplete="new-password" oninput="checkPasswordStrength(this.value)">
+                        <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility('signup-password', this)">Show</button>
+                      </div>
+                      <div class="pw-strength-meter">
+                        <div class="pw-strength-segment" id="pw-bar-1"></div>
+                        <div class="pw-strength-segment" id="pw-bar-2"></div>
+                        <div class="pw-strength-segment" id="pw-bar-3"></div>
+                      </div>
+                      <div class="pw-strength-text" id="pw-strength-text">Password strength: Empty</div>
+                    </div>
+
+                    <div class="auth-form-group">
+                      <label for="signup-confirm-password">Confirm Password</label>
+                      <div class="password-input-wrap">
+                        <input type="password" id="signup-confirm-password" class="auth-input" placeholder="Re-enter password" required autocomplete="new-password">
+                        <button type="button" class="btn-toggle-pw" onclick="togglePasswordVisibility('signup-confirm-password', this)">Show</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="auth-extra-row" style="margin-top: 10px;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                      <input type="checkbox" id="signup-terms" required checked>
+                      I agree to the Terms of Service & Privacy Policy
+                    </label>
+                  </div>
+
+                  <button type="submit" class="btn-auth-submit" id="btn-submit-signup">
+                    <span id="signup-btn-text">Create Student Account ➔</span>
+                  </button>
+                </form>
+
+                <!-- Social SSO Authentication -->
+                <div class="social-divider">
+                  <span>OR CONTINUE WITH SINGLE SIGN-ON</span>
+                </div>
+
+                <div class="social-auth-grid">
+                  <button type="button" class="btn-social-auth" onclick="handleSocialAuth('google')" title="Sign in with Google">
+                    <svg viewBox="0 0 24 24" width="16" height="16">
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    Google
+                  </button>
+
+                  <button type="button" class="btn-social-auth" onclick="handleSocialAuth('linkedin')" title="Sign in with LinkedIn">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="#0A66C2">
+                      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76c-.97 0-1.75-.79-1.75-1.76s.78-1.76 1.75-1.76 1.75.79 1.75 1.76-.78 1.76-1.75 1.76m1.39 9.74v-8.37H5.07v8.37h2.78z"/>
+                    </svg>
+                    LinkedIn
+                  </button>
+
+                  <button type="button" class="btn-social-auth" onclick="handleSocialAuth('github')" title="Sign in with GitHub">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="#FFFFFF">
+                      <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+                    </svg>
+                    GitHub
+                  </button>
+
+                  <button type="button" class="btn-social-auth" onclick="handleSocialAuth('microsoft')" title="Sign in with Microsoft">
+                    <svg viewBox="0 0 24 24" width="16" height="16">
+                      <rect x="1" y="1" width="10" height="10" fill="#F25022"/>
+                      <rect x="13" y="1" width="10" height="10" fill="#7FBA00"/>
+                      <rect x="1" y="13" width="10" height="10" fill="#00A4EF"/>
+                      <rect x="13" y="13" width="10" height="10" fill="#FFB900"/>
+                    </svg>
+                    Microsoft
+                  </button>
+                </div>
+
+                <!-- 1-Click Fast Demo Accounts Bar -->
+                <div class="demo-accounts-box">
+                  <div class="demo-accounts-header">
+                    <span>Quick evaluation accounts</span>
+                    <small style="color: #94a3b8; font-size: 0.72rem;">Instant sign-in without manual typing</small>
+                  </div>
+                  <div class="demo-chips-grid">
+                    <button type="button" class="demo-chip-btn" onclick="quickLoginDemo('student')">
+                      <span class="demo-chip-role" style="color: #38bdf8;">Demo Student</span>
+                      <span class="demo-chip-email">student@skillpulse.in</span>
+                      <small style="color: #94a3b8; font-size: 0.65rem;">Aarav • IIT Bombay</small>
+                    </button>
+
+                    <button type="button" class="demo-chip-btn" onclick="quickLoginDemo('recruiter')">
+                      <span class="demo-chip-role" style="color: #34d399;">Demo Recruiter</span>
+                      <span class="demo-chip-email">recruiter@techhire.in</span>
+                      <small style="color: #94a3b8; font-size: 0.65rem;">Priya • Zomato Talent</small>
+                    </button>
+
+                    <button type="button" class="demo-chip-btn" onclick="quickLoginDemo('other')">
+                      <span class="demo-chip-role" style="color: #c084fc;">Demo Educator</span>
+                      <span class="demo-chip-email">educator@academia.in</span>
+                      <small style="color: #94a3b8; font-size: 0.65rem;">Dr. Ramesh • NSDC</small>
+                    </button>
+                  </div>
+                </div>
+
+              </div> <!-- End auth-forms-view -->
+
+            </div>
+          </div>
+        </section>
+
+        <!-- Forgot Password Modal -->
+        <div class="auth-modal-backdrop" id="auth-forgot-modal" onclick="closeForgotPasswordModal(event)">
+          <div class="auth-modal-window" onclick="event.stopPropagation()">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h3 style="font-size: 1.15rem; color: #ffffff;">Reset Account Password</h3>
+              <button onclick="closeForgotPasswordModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✕</button>
+            </div>
+            <p style="font-size: 0.82rem; color: #94a3b8; margin-bottom: 16px;">
+              Enter your registered email address and choose a new password. Your password will be updated immediately.
+            </p>
+            <form onsubmit="handleResetPasswordSubmit(event)">
+              <div class="auth-form-group">
+                <label for="reset-email">Registered Email Address</label>
+                <input type="email" id="reset-email" class="auth-input" placeholder="e.g. student@skillpulse.in" required>
+              </div>
+              <div class="auth-form-group">
+                <label for="reset-new-password">New Password (min 6 characters)</label>
+                <input type="password" id="reset-new-password" class="auth-input" placeholder="Enter new secure password" required minlength="6">
+              </div>
+              <div id="reset-alert" class="auth-alert" style="margin-bottom: 14px;"></div>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+                <button type="button" class="btn-secondary" onclick="closeForgotPasswordModal()">Cancel</button>
+                <button type="submit" class="btn-primary">Update Password ➔</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Custom Scripts -->
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

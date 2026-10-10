@@ -1,0 +1,29 @@
+# Python environments & caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+_uv/
+
+# Temporary / testing / profiling folders
+tmp-chrome-profile/
+.pytest_cache/
+.coverage
+htmlcov/
+*lo_profile*
+output/report/combined_rendered/
+output/report/rendered/
+
+# Deployment & IDE
+.vercel/
+.vercelignore
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db

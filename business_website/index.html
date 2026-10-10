@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vanguard Ledger & Co. | Strategic Accounting & Capital Advisory</title>
+  <meta name="description" content="Contemporary financial architecture, corporate accounting, fractional CFO leadership, and impact diligence for high-growth enterprises and visionary leaders.">
+
+  <!-- Google Fonts: Plus Jakarta Sans (Modern Sans) & Newsreader (Editorial Serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ================= HEADER / STICKY NAVIGATION ================= -->
+  <header class="site-header" id="site-header">
+    <div class="nav-container">
+      <a href="#hero" class="brand-logo" aria-label="Vanguard Ledger Home">
+        <span class="logo-mark">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 4H10V10H4V4Z" fill="#0f766e"/>
+            <path d="M14 4H20V10H14V4Z" fill="#0f766e" fill-opacity="0.6"/>
+            <path d="M4 14H10V20H4V14Z" fill="#0f766e" fill-opacity="0.8"/>
+            <path d="M14 14H20V20H14V14Z" fill="#0f766e"/>
+          </svg>
+        </span>
+        <span class="logo-text">Vanguard<span class="logo-accent">Ledger</span></span>
+      </a>
+
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-list">
+          <li><a href="#hero" class="nav-link active">Home</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#services" class="nav-link">Services</a></li>
+          <li><a href="#impact" class="nav-link">Impact / Projects</a></li>
+          <li><a href="#estimator" class="nav-link">Runway Tool</a></li>
+          <li><a href="#testimonials" class="nav-link">Stories</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn btn-primary nav-cta" id="open-consultation-btn">Schedule Consultation</button>
+        <button class="mobile-menu-toggle" id="mobile-toggle" aria-label="Toggle mobile menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Navigation -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="drawer-header">
+      <div class="logo-text">Vanguard<span class="logo-accent">Ledger</span></div>
+      <button class="drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <ul class="drawer-links">
+      <li><a href="#hero" class="drawer-link">Home</a></li>
+      <li><a href="#about" class="drawer-link">About</a></li>
+      <li><a href="#services" class="drawer-link">Services</a></li>
+      <li><a href="#impact" class="drawer-link">Impact / Projects</a></li>
+      <li><a href="#estimator" class="drawer-link">Runway Tool</a></li>
+      <li><a href="#testimonials" class="drawer-link">Stories</a></li>
+      <li><a href="#contact" class="drawer-link">Contact</a></li>
+    </ul>
+    <div class="drawer-footer">
+      <button class="btn btn-primary btn-block" id="mobile-consult-btn">Schedule Consultation</button>
+      <div class="drawer-contact-info">
+        <p>Direct Inquiries: advisory@vanguardledger.com</p>
+        <p>London • New York • Zurich</p>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- ================= HERO SECTION ================= -->
+    <section class="hero-section" id="hero">
+      <div class="container hero-container">
+        
+        <div class="hero-content">
+          <div class="eyebrow-pill">
+            <span class="pulse-dot"></span>
+            <span>STRATEGIC ACCOUNTING &bull; CAPITAL ADVISORY</span>
+          </div>
+
+          <h1 class="hero-headline">
+            Where financial mastery meets <span class="editorial-emphasis">purposeful growth.</span>
+          </h1>
+
+          <p class="hero-description">
+            Vanguard Ledger provides high-growth enterprises and visionary leaders with Tier-1 accounting architecture, fractional CFO leadership, and rigorous transaction diligence — turning complex balance sheets into strategic catalysts.
+          </p>
+
+          <div class="hero-cta-group">
+            <button class="btn btn-primary btn-lg" id="hero-book-btn">
+              <span>Book a Strategy Session</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+            <a href="#services" class="btn btn-secondary btn-lg">
+              <span>Explore Advisory Practice</span>
+            </a>
+          </div>
+
+          <div class="hero-social-proof">
+            <div class="avatar-stack">
+              <span class="avatar-bubble" style="background:#0f766e;">CEO</span>
+              <span class="avatar-bubble" style="background:#0369a1;">CFO</span>
+              <span class="avatar-bubble" style="background:#4338ca;">DIR</span>
+            </div>
+            <div class="proof-text">
+              <strong>Trusted by 320+ enterprises</strong> across Series A to pre-IPO & family offices.
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual-wrapper">
+          <div class="hero-image-frame">
+            <img src="assets/img/hero.jpg" alt="Executive financial advisory meeting overlooking modern cityscape" class="hero-main-img">
+            
+            <!-- Floating Data Widgets -->
+            <div class="floating-stat-card card-top-left">
+              <div class="stat-icon-wrap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div>
+                <div class="stat-card-label">Runway Expansion</div>
+                <div class="stat-card-value">+42.8% Liquidity</div>
+              </div>
+            </div>
+
+            <div class="floating-stat-card card-bottom-right">
+              <div class="seal-badge">
+                <span class="seal-check">✓</span>
+                <div>
+                  <div class="seal-title">Clean Audit Guarantee</div>
+                  <div class="seal-sub">100% GAAP & IFRS Compliance</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Subtle Decorative Background Mesh -->
+      <div class="hero-bg-accent" aria-hidden="true"></div>
+    </section>
+
+    <!-- ================= TRUST / IMPACT STRIP ================= -->
+    <section class="trust-strip-section" id="trust">
+      <div class="container">
+        <div class="trust-grid">
+          
+          <div class="trust-item">
+            <div class="trust-number" data-target="4.2">$4.2B+</div>
+            <div class="trust-label">Capital & Assets Advised</div>
+            <p class="trust-sub">Across private equity, venture equity, and treasury reserves.</p>
+          </div>
+
+          <div class="trust-item">
+            <div class="trust-number" data-target="99.8">99.8%</div>
+            <div class="trust-label">Audit & Compliance Accuracy</div>
+            <p class="trust-sub">Flawless Big 4 and regulatory audit readiness track record.</p>
+          </div>
+
+          <div class="trust-item">
+            <div class="trust-number" data-target="320">320+</div>
+            <div class="trust-label">Enterprises & Portfolios</div>
+            <p class="trust-sub">From Series A scale-ups to generational family trusts.</p>
+          </div>
+
+          <div class="trust-item">
+            <div class="trust-number" data-target="18">18+</div>
+            <div class="trust-label">Years of Fiduciary Excellence</div>
+            <p class="trust-sub">London, New York, and Zurich cross-border jurisdictions.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT SECTION ================= -->
+    <section class="about-section" id="about">
+      <div class="container about-container">
+        
+        <div class="about-visual-side">
+          <div class="about-img-frame">
+            <img src="assets/img/about.jpg" alt="Vanguard Ledger directors conducting precision strategic audit" class="about-main-img">
+            <div class="about-floating-seal">
+              <span class="badge-year">EST. 2008</span>
+              <strong>Fiduciary Integrity Standard</strong>
+              <p>Independent &bull; Discretionary &bull; Objective</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-text-side">
+          <div class="section-eyebrow">ABOUT VANGUARD LEDGER</div>
+          <h2 class="section-heading">
+            We don't merely reconcile past transactions. <span class="editorial-emphasis">We architect future solvency.</span>
+          </h2>
+          <p class="section-lead">
+            Traditional accounting firms view finance as a backward-looking compliance chore. We view your balance sheet as a strategic instrument for durable growth, capital efficiency, and structural advantage.
+          </p>
+
+          <div class="about-story-points">
+            <div class="story-point">
+              <div class="point-number">01</div>
+              <div class="point-content">
+                <h3>Empirical Financial Rigor</h3>
+                <p>Every projection is stress-tested against volatile macroeconomic variables, cost-of-capital shifts, and scenario simulations.</p>
+              </div>
+            </div>
+
+            <div class="story-point">
+              <div class="point-number">02</div>
+              <div class="point-content">
+                <h3>True Fiduciary Alignment</h3>
+                <p>We operate with pure objectivity — zero vendor kickbacks, zero conflicts of interest, and unwavering stakeholder loyalty.</p>
+              </div>
+            </div>
+
+            <div class="story-point">
+              <div class="point-number">03</div>
+              <div class="point-content">
+                <h3>Technological Agility</h3>
+                <p>Real-time continuous close, automated multi-entity consolidation, and modern ERP workflows integrated without disruption.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-cta-wrapper">
+            <button class="btn btn-secondary" id="about-learn-more-btn">
+              <span>Learn More About Our Philosophy</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= SERVICES / WHAT WE DO ================= -->
+    <section class="services-section" id="services">
+      <div class="container">
+        
+        <div class="section-header-centered">
+          <div class="section-eyebrow">PRACTICE AREAS & ADVISORY</div>
+          <h2 class="section-heading">
+            Bespoke financial capabilities for <span class="editorial-emphasis">each growth inflection.</span>
+          </h2>
+          <p class="section-subtitle">
+            From foundation bookkeeping governance to complex cross-border M&A transactions, our multidisciplinary teams deliver institutional clarity.
+          </p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="service-filters" id="service-filters">
+          <button class="filter-tab active" data-filter="all">All Disciplines</button>
+          <button class="filter-tab" data-filter="accounting">Accounting & Tax</button>
+          <button class="filter-tab" data-filter="cfo">Fractional CFO</button>
+          <button class="filter-tab" data-filter="capital">Capital & M&A</button>
+          <button class="filter-tab" data-filter="governance">Governance & ESG</button>
+        </div>
+
+        <!-- Services Cards Grid -->
+        <div class="services-grid">
+          
+          <!-- Card 1 -->
+          <div class="service-card" data-category="accounting">
+            <div class="card-icon-bubble">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/></svg>
+            </div>
+            <div class="service-category-tag">CORE ASSURANCE</div>
+            <h3 class="service-title">Corporate Accounting & Tax Architecture</h3>
+            <p class="service-desc">
+              Comprehensive GAAP/IFRS bookkeeping, cross-entity consolidations, and strategic tax mitigation structuring designed to preserve liquid capital.
+            </p>
+            <div class="service-link">
+              <span>View Engagement Scope</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="service-card" data-category="cfo">
+            <div class="card-icon-bubble">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="service-category-tag">EXECUTIVE LEADERSHIP</div>
+            <h3 class="service-title">Fractional CFO & Runway Optimization</h3>
+            <p class="service-desc">
+              Board-level strategic guidance, burn-rate modeling, investor reporting, unit-economics sharpening, and proactive liquidity management.
+            </p>
+            <div class="service-link">
+              <span>View Engagement Scope</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="service-card" data-category="governance">
+            <div class="card-icon-bubble">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="service-category-tag">RISK MANAGEMENT</div>
+            <h3 class="service-title">Audit Readiness & Internal Controls</h3>
+            <p class="service-desc">
+              Pre-audit simulations, SOX compliance protocols, fraud defense audits, and gap reconciliations ensuring zero-deficiency outcomes.
+            </p>
+            <div class="service-link">
+              <span>View Engagement Scope</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="service-card" data-category="capital">
+            <div class="card-icon-bubble">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8l-8 8M8 8h8v8"/></svg>
+            </div>
+            <div class="service-category-tag">TRANSACTIONS</div>
+            <h3 class="service-title">M&A Due Diligence & Valuation</h3>
+            <p class="service-desc">
+              Buy-side and sell-side Quality of Earnings (QoE) reports, working capital adjustments, deal structuring, and financial covenant validation.
+            </p>
+            <div class="service-link">
+              <span>View Engagement Scope</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="service-card" data-category="accounting">
+            <div class="card-icon-bubble">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <div class="service-category-tag">CROSS-BORDER</div>
+            <h3 class="service-title">Global Treasury & Multi-Currency</h3>
+            <p class="service-desc">
+              International tax treaties, transfer pricing documentation, FX hedging mechanisms, and repatriation protocols across US, UK, and EU entities.
+            </p>
+            <div class="service-link">
+              <span>View Engagement Scope</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="service-card" data-category="governance">
+            <div class="card-icon-bubble">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07"/></svg>
+            </div>
+            <div class="service-category-tag">SUSTAINABLE CAPITAL</div>
+            <h3 class="service-title">ESG & Impact Assurance Auditing</h3>
+            <p class="service-desc">
+              Verifiable Scope 1-3 carbon accounting, sustainability-linked loan covenant compliance, and CSRD/SEC ESG assurance reporting.
+            </p>
+            <div class="service-link">
+              <span>View Engagement Scope</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= INTERACTIVE RUNWAY ESTIMATOR ================= -->
+    <section class="estimator-section" id="estimator">
+      <div class="container">
+        
+        <div class="estimator-box">
+          <div class="estimator-header">
+            <div class="eyebrow-pill" style="background: rgba(255,255,255,0.08); color: #99f6e4;">
+              <span>INTERACTIVE LIQUIDITY CALCULATOR</span>
+            </div>
+            <h2 class="estimator-title">Assess Your Financial Runway & Solvency Window</h2>
+            <p class="estimator-subtitle">
+              Adjust your current operational figures below for an instant preliminary liquidity health assessment.
+            </p>
+          </div>
+
+          <div class="estimator-body">
+            <div class="calculator-inputs">
+              
+              <div class="input-field-group">
+                <div class="input-label-row">
+                  <label for="cash-reserves">Liquid Cash Reserves ($)</label>
+                  <span class="input-display" id="display-cash">$1,500,000</span>
+                </div>
+                <input type="range" id="cash-reserves" min="100000" max="10000000" step="50000" value="1500000" class="custom-slider">
+              </div>
+
+              <div class="input-field-group">
+                <div class="input-label-row">
+                  <label for="monthly-burn">Monthly Operational Burn ($)</label>
+                  <span class="input-display" id="display-burn">$120,000</span>
+                </div>
+                <input type="range" id="monthly-burn" min="10000" max="1000000" step="10000" value="120000" class="custom-slider">
+              </div>
+
+              <div class="input-field-group">
+                <div class="input-label-row">
+                  <label for="monthly-revenue">Monthly Recurring Revenue ($)</label>
+                  <span class="input-display" id="display-revenue">$45,000</span>
+                </div>
+                <input type="range" id="monthly-revenue" min="0" max="1000000" step="5000" value="45000" class="custom-slider">
+              </div>
+
+            </div>
+
+            <div class="calculator-results">
+              <div class="results-card">
+                <div class="result-label">Calculated Net Runway</div>
+                <div class="result-number" id="result-runway">20.0 Months</div>
+                <div class="result-status-pill status-healthy" id="result-status">Healthy Solvency Horizon</div>
+                
+                <div class="result-breakdown">
+                  <div class="breakdown-row">
+                    <span>Net Monthly Burn:</span>
+                    <strong id="result-net-burn">$75,000 / mo</strong>
+                  </div>
+                  <div class="breakdown-row">
+                    <span>Recommended Reserve:</span>
+                    <strong id="result-target-reserve">$900,000 (12 Mo)</strong>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="calc-cta-btn">
+                  <span>Request Full Capital Audit</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= FEATURED IMPACT / PROJECTS ================= -->
+    <section class="impact-section" id="impact">
+      <div class="container">
+        
+        <div class="section-header-centered">
+          <div class="section-eyebrow">CASE STUDIES & IMPACT</div>
+          <h2 class="section-heading">
+            Measurable enterprise transformations. <span class="editorial-emphasis">Zero ambiguity.</span>
+          </h2>
+          <p class="section-subtitle">
+            Explore how our strategic advisory and accounting architecture unlocked shareholder value across diverse sectors.
+          </p>
+        </div>
+
+        <!-- Hero Spotlight Case Study Card -->
+        <div class="spotlight-project-card">
+          <div class="spotlight-content">
+            <div class="project-tags">
+              <span class="tag-pill">Series B FinTech</span>
+              <span class="tag-pill">M&A Due Diligence</span>
+              <span class="tag-pill">Fractional CFO</span>
+            </div>
+            <h3 class="spotlight-title">Project Helios: Restructuring Capital Efficiency to Secure $42M Growth Round</h3>
+            <p class="spotlight-desc">
+              A London-based cross-border payments firm was burning capital at an unsustainable multiple. Vanguard Ledger conducted a complete unit-economics overhaul, restructured multi-currency reserves, and established a clean Quality of Earnings audit — enabling their successful Series B closure at a 42% reduced cost of capital.
+            </p>
+
+            <div class="spotlight-metrics-grid">
+              <div class="metric-block">
+                <div class="metric-val">+3.4x</div>
+                <div class="metric-lbl">Runway Extended</div>
+              </div>
+              <div class="metric-block">
+                <div class="metric-val">$42M</div>
+                <div class="metric-lbl">Capital Secured</div>
+              </div>
+              <div class="metric-block">
+                <div class="metric-val">0</div>
+                <div class="metric-lbl">Audit Deficiencies</div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="openCaseModal('helios')">
+              <span>Explore Detailed Case Study</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+
+          <div class="spotlight-visual">
+            <div class="visual-inner-card">
+              <div class="inner-header">
+                <span>PORTFOLIO AUDIT REPORT</span>
+                <span class="live-tag">VERIFIED</span>
+              </div>
+              <div class="chart-bars-mock">
+                <div class="bar-col"><div class="bar-fill" style="height: 35%;"></div><span>Q1</span></div>
+                <div class="bar-col"><div class="bar-fill" style="height: 48%;"></div><span>Q2</span></div>
+                <div class="bar-col"><div class="bar-fill" style="height: 65%;"></div><span>Q3</span></div>
+                <div class="bar-col"><div class="bar-fill accent" style="height: 94%;"></div><span>Q4</span></div>
+              </div>
+              <div class="metric-caption">EBITDA Margin Improvement: +18.4%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Secondary Case Studies Grid -->
+        <div class="projects-grid">
+          
+          <div class="project-card">
+            <div class="project-card-header">
+              <span class="tag-pill">Clean Energy</span>
+              <span class="card-date">2025 Impact</span>
+            </div>
+            <h4 class="project-card-title">GreenPeak Infrastructure: $180M Multi-Asset Tax Equity Structuring</h4>
+            <p class="project-card-desc">
+              Structured complex solar asset depreciation schedules and federal investment tax credits across 14 municipal entities.
+            </p>
+            <div class="project-card-footer">
+              <span class="key-outcome">Outcome: $22.4M Tax Savings</span>
+              <button class="text-link" onclick="openCaseModal('greenpeak')">Read Review &rarr;</button>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div class="project-card-header">
+              <span class="tag-pill">Global SaaS</span>
+              <span class="card-date">2025 Impact</span>
+            </div>
+            <h4 class="project-card-title">CloudSync International: Transfer Pricing & Multi-Currency Treasury Overhaul</h4>
+            <p class="project-card-desc">
+              Integrated NetSuite ERP multi-book consolidation across US, UK, and German subsidiaries with zero currency slippage.
+            </p>
+            <div class="project-card-footer">
+              <span class="key-outcome">Outcome: 4-Day Close Cycle</span>
+              <button class="text-link" onclick="openCaseModal('cloudsync')">Read Review &rarr;</button>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div class="project-card-header">
+              <span class="tag-pill">Healthcare Logistics</span>
+              <span class="card-date">2026 Impact</span>
+            </div>
+            <h4 class="project-card-title">MedSupply Network: Pre-IPO Working Capital & SOX Internal Controls</h4>
+            <p class="project-card-desc">
+              Identified and eliminated $4.8M in inventory variance leakages prior to major healthcare network acquisition.
+            </p>
+            <div class="project-card-footer">
+              <span class="key-outcome">Outcome: Unqualified Audit Opinion</span>
+              <button class="text-link" onclick="openCaseModal('medsupply')">Read Review &rarr;</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= MISSION SECTION ================= -->
+    <section class="mission-section" id="mission">
+      <div class="container mission-container">
+        <div class="mission-content">
+          <div class="section-eyebrow" style="color: #5eead4;">OUR CORE FIDUCIARY MANIFESTO</div>
+          <h2 class="mission-statement">
+            “Financial integrity is not merely a compliance obligation. It is the cornerstone of societal trust and sustainable innovation.”
+          </h2>
+          <p class="mission-paragraph">
+            In an economic environment clouded by vanity metrics and reckless leverage, Vanguard Ledger exists to champion verifiable economic truth. We empower enterprises that build genuine, enduring value for shareholders, employees, and communities alike.
+          </p>
+
+          <div class="mission-tenets-grid">
+            <div class="tenet-item">
+              <div class="tenet-icon">✦</div>
+              <div>
+                <strong>Radical Transparency</strong>
+                <p>No obfuscated liabilities. Every dollar accounted for with surgical accuracy.</p>
+              </div>
+            </div>
+
+            <div class="tenet-item">
+              <div class="tenet-icon">✦</div>
+              <div>
+                <strong>Long-Term Value Preservation</strong>
+                <p>Prioritizing structural resilience over short-term quarterly theatrics.</p>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-lg" id="mission-cta-btn">
+            <span>Partner With Our Leadership</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TESTIMONIALS / STORIES ================= -->
+    <section class="testimonials-section" id="testimonials">
+      <div class="container">
+        
+        <div class="section-header-centered">
+          <div class="section-eyebrow">CLIENT ENDORSEMENTS</div>
+          <h2 class="section-heading">
+            Trusted by the leaders who <span class="editorial-emphasis">shape industries.</span>
+          </h2>
+        </div>
+
+        <div class="testimonial-slider-container">
+          <div class="testimonial-card active" id="testimonial-1">
+            <div class="quote-mark">“</div>
+            <blockquote class="testimonial-quote">
+              Vanguard Ledger transformed our entire financial operations prior to our Series B. Their fractional CFO team didn’t just produce models — they defended our unit economics in front of tier-1 venture partners with flawless authority. We wouldn't consider another financial partner.
+            </blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar" style="background: #0f766e;">SM</div>
+              <div class="author-meta">
+                <div class="author-name">Sarah Montgomery</div>
+                <div class="author-title">Chief Executive Officer, PayStream Global (London)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card" id="testimonial-2">
+            <div class="quote-mark">“</div>
+            <blockquote class="testimonial-quote">
+              When navigating a complex multi-jurisdiction acquisition, their M&A due diligence team uncovered critical working capital discrepancies that saved our consortium over $6.5M at closing. Their thoroughness is unmatched in modern advisory.
+            </blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar" style="background: #0369a1;">HW</div>
+              <div class="author-meta">
+                <div class="author-name">Henrik Weiss</div>
+                <div class="author-title">Managing Director, Alpine Horizon Capital (Zurich)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card" id="testimonial-3">
+            <div class="quote-mark">“</div>
+            <blockquote class="testimonial-quote">
+              The level of discretion, technical depth, and strategic foresight Vanguard Ledger brings to our family office is beyond standard accounting. They are strategic counselors in the truest sense.
+            </blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar" style="background: #4338ca;">ER</div>
+              <div class="author-meta">
+                <div class="author-name">Elena Rostova</div>
+                <div class="author-title">Trustee & Principal, Rostova Legacy Trust (New York)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slider Controls -->
+        <div class="slider-controls">
+          <button class="slider-btn prev" id="slider-prev" aria-label="Previous testimonial">&larr;</button>
+          <div class="slider-dots" id="slider-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+          </div>
+          <button class="slider-btn next" id="slider-next" aria-label="Next testimonial">&rarr;</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= CALL TO ACTION (FULL WIDTH) ================= -->
+    <section class="final-cta-section" id="contact">
+      <div class="container final-cta-container">
+        <div class="cta-inner-box">
+          <div class="section-eyebrow" style="color: #2dd4bf;">NEXT STEPS &bull; CONFIDENTIAL DISCOVERY</div>
+          <h2 class="cta-heading">
+            Let’s create meaningful impact together.
+          </h2>
+          <p class="cta-paragraph">
+            Whether preparing for an institutional capital raise, optimizing multi-entity tax architecture, or seeking senior fiduciary leadership, schedule an executive consultation with our partner team today.
+          </p>
+
+          <div class="cta-button-group">
+            <button class="btn btn-primary btn-lg" id="cta-book-btn">
+              <span>Schedule Strategy Call (30 Min)</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+            <button class="btn btn-secondary-light btn-lg" id="download-guide-btn">
+              <span>Download 2026 Enterprise Financial Guide</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            </button>
+          </div>
+
+          <div class="cta-trust-note">
+            <span>🔒 Confidentiality Guaranteed</span>
+            <span>&bull;</span>
+            <span>Strict NDA Protocol</span>
+            <span>&bull;</span>
+            <span>Direct Partner Response Within 24 Hours</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        
+        <div class="footer-brand-col">
+          <a href="#hero" class="brand-logo">
+            <span class="logo-mark">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 4H10V10H4V4Z" fill="#0f766e"/><path d="M14 4H20V10H14V4Z" fill="#0f766e" fill-opacity="0.6"/><path d="M4 14H10V20H4V14Z" fill="#0f766e" fill-opacity="0.8"/><path d="M14 14H20V20H14V14Z" fill="#0f766e"/></svg>
+            </span>
+            <span class="logo-text">Vanguard<span class="logo-accent">Ledger</span></span>
+          </a>
+          <p class="footer-bio">
+            Independent strategic accounting, fractional CFO leadership, and capital assurance advisory for enterprise institutions and scale-ups worldwide.
+          </p>
+          <div class="soc-certification-badge">
+            <span class="badge-dot"></span>
+            <span>SOC 2 Type II Certified &bull; Big 4 Senior Alumni</span>
+          </div>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Practice Areas</h4>
+          <ul>
+            <li><a href="#services">Corporate Accounting & Tax</a></li>
+            <li><a href="#services">Fractional CFO Leadership</a></li>
+            <li><a href="#services">M&A Due Diligence</a></li>
+            <li><a href="#services">Internal Controls & Audit</a></li>
+            <li><a href="#services">Global Treasury & FX</a></li>
+            <li><a href="#services">ESG & Carbon Accounting</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Organization</h4>
+          <ul>
+            <li><a href="#about">About Our Heritage</a></li>
+            <li><a href="#impact">Featured Impact Cases</a></li>
+            <li><a href="#mission">Fiduciary Manifesto</a></li>
+            <li><a href="#testimonials">Client Stories</a></li>
+            <li><a href="#estimator">Runway Estimator</a></li>
+            <li><a href="#contact">Executive Careers</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Global Inquiries</h4>
+          <p class="office-location">
+            <strong>London Headquarters:</strong><br>
+            100 Bishopsgate, Level 24<br>
+            London EC2N 4AG, United Kingdom<br>
+            +44 (0) 20 7946 0920
+          </p>
+          <p class="office-location" style="margin-top: 10px;">
+            <strong>New York Advisory:</strong><br>
+            One Vanderbilt, Suite 3800<br>
+            New York, NY 10017, USA<br>
+            +1 (212) 555-0198
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Newsletter Subscription Strip -->
+      <div class="footer-newsletter-row">
+        <div class="newsletter-text">
+          <strong>The Ledger Quarterly Executive Memo</strong>
+          <p>Curated briefing on macroeconomic liquidity, tax architecture, and capital markets.</p>
+        </div>
+        <form class="newsletter-form" id="newsletter-form">
+          <input type="email" placeholder="Enter corporate email address..." required id="newsletter-email">
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+      </div>
+
+      <div class="footer-bottom-row">
+        <div class="footer-copyright">
+          &copy; 2026 Vanguard Ledger & Co. All rights reserved. Registered Chartered Accountancy & Fiduciary Advisory.
+        </div>
+        <div class="footer-legal-links">
+          <a href="#" onclick="alert('Privacy Policy: All client communications and analytical telemetry are encrypted with 256-bit AES standard.'); return false;">Privacy Policy</a>
+          <a href="#" onclick="alert('Terms of Advisory: Professional services governed under UK & US Chartered Institute Standards.'); return false;">Terms of Engagement</a>
+          <a href="#" onclick="alert('Regulatory Disclosures: Vanguard Ledger operates strictly as an independent management consulting and fiduciary advisory firm.'); return false;">Regulatory Disclosures</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= INTERACTIVE MODALS ================= -->
+
+  <!-- 1. Consultation Booking Modal -->
+  <div class="modal-backdrop" id="consultation-modal">
+    <div class="modal-dialog">
+      <button class="modal-close" id="modal-close-btn">&times;</button>
+      <div class="modal-header">
+        <div class="eyebrow-pill" style="margin-bottom: 8px;">CONFIDENTIAL ENGAGEMENT</div>
+        <h3 class="modal-title">Schedule Executive Strategy Session</h3>
+        <p class="modal-sub">Direct 30-minute discovery consultation with a Senior Partner.</p>
+      </div>
+      <form class="consultation-form" id="consultation-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="client-name">Full Name *</label>
+            <input type="text" id="client-name" required placeholder="e.g. David Vance">
+          </div>
+          <div class="form-group">
+            <label for="client-email">Corporate Email *</label>
+            <input type="email" id="client-email" required placeholder="d.vance@enterprise.com">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="client-company">Company / Entity Name *</label>
+            <input type="text" id="client-company" required placeholder="Acme Technologies Ltd">
+          </div>
+          <div class="form-group">
+            <label for="client-revenue">Annual Revenue Range</label>
+            <select id="client-revenue">
+              <option value="seed">$1M - $5M ARR</option>
+              <option value="growth" selected>$5M - $25M ARR</option>
+              <option value="scale">$25M - $100M ARR</option>
+              <option value="enterprise">$100M+ ARR / Family Trust</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="client-practice">Primary Advisory Focus</label>
+          <select id="client-practice">
+            <option value="cfo">Fractional CFO & Runway Optimization</option>
+            <option value="accounting">Corporate Accounting & Tax Architecture</option>
+            <option value="mna">M&A Due Diligence / QoE Audit</option>
+            <option value="controls">Audit Readiness & Risk Governance</option>
+            <option value="esg">ESG & Impact Assurance</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="client-notes">Strategic Context / Specific Deadlines (Optional)</label>
+          <textarea id="client-notes" rows="3" placeholder="Brief outline of your current capital inflection point or audit timeline..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg">
+          <span>Confirm Confidential Request</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Case Study Modal -->
+  <div class="modal-backdrop" id="case-study-modal">
+    <div class="modal-dialog modal-lg">
+      <button class="modal-close" id="case-modal-close-btn">&times;</button>
+      <div id="case-modal-content">
+        <!-- Dynamically injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>

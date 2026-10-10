@@ -1,0 +1,7 @@
+# Optional packages for the separate Streamlit analytics dashboard (app.py).
+# Install this file locally when using that interface:
+#   python -m pip install -r requirements-analytics-dashboard.txt
+-r requirements.txt
+streamlit>=1.35.0
+plotly>=5.18.0
+scikit-learn>=1.4.0
