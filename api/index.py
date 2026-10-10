@@ -1,11 +1,19 @@
-"""Vercel FastAPI entrypoint with diagnostic routing and path restoration."""
+"""Vercel FastAPI entrypoint with comprehensive path resolution and ASGI routing."""
 
+import os
 import sys
+import traceback
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+# Ensure root paths are on sys.path
+this_file = Path(__file__).resolve()
+this_dir = this_file.parent
+parent_dir = this_dir.parent
+cwd = Path.cwd().resolve()
+
+for p in [str(cwd), str(parent_dir), str(this_dir), "/var/task"]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
@@ -13,10 +21,11 @@ from starlette.types import ASGIApp, Receive, Scope, Send
 
 load_error = None
 try:
+    # First try direct import from backend.app
     from backend.app import app as aroha_app
     base_app = aroha_app
-except Exception as exc:
-    load_error = f"{type(exc).__name__}: {str(exc)}"
+except Exception:
+    load_error = traceback.format_exc()
     base_app = FastAPI()
 
 
@@ -31,19 +40,22 @@ class VercelPathMiddleware:
             raw_headers = dict(scope.get("headers", []))
             headers_decoded = {k.decode("latin1"): v.decode("latin1") for k, v in raw_headers.items()}
             
-            # Diagnostic endpoint accessible at any path with ?diag=1
+            # Diagnostic endpoint
             query = scope.get("query_string", b"").decode("latin1")
             if "diag=1" in query or scope.get("path") in ["/api/diag", "/diag"]:
                 response = JSONResponse({
                     "load_error": load_error,
+                    "sys_path": sys.path[:5],
+                    "cwd": str(cwd),
+                    "this_file": str(this_file),
                     "original_scope_path": scope.get("path"),
                     "headers": headers_decoded,
-                    "root_contents": [p.name for p in PROJECT_ROOT.iterdir()] if PROJECT_ROOT.exists() else []
+                    "backend_exists": (cwd / "backend").exists() or (parent_dir / "backend").exists(),
                 })
                 await response(scope, receive, send)
                 return
 
-            # Extract matched path
+            # Extract matched path from headers
             matched = (
                 headers_decoded.get("x-matched-path")
                 or headers_decoded.get("x-forwarded-uri")
