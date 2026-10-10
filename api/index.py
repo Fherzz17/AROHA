@@ -1,8 +1,9 @@
-"""Vercel FastAPI entrypoint with ASGI path restoration."""
+"""Vercel FastAPI entrypoint with deterministic path restoration."""
 
 import os
 import sys
 import traceback
+import urllib.parse
 from pathlib import Path
 
 # Ensure root paths are on sys.path
@@ -31,29 +32,24 @@ except Exception as exc:
 
 
 class VercelPathMiddleware:
-    """Restores the original request path from Vercel headers."""
+    """Restores the original request path from the captured __path query param."""
 
     def __init__(self, app: ASGIApp):
         self.app = app
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] == "http":
-            raw_headers = dict(scope.get("headers", []))
-            headers_decoded = {k.decode("latin1"): v.decode("latin1") for k, v in raw_headers.items()}
+            query_str = scope.get("query_string", b"").decode("latin1")
+            if "__path=" in query_str:
+                params = urllib.parse.parse_qs(query_str)
+                real_path = params.get("__path", ["/"])[0]
+                if not real_path.startswith("/"):
+                    real_path = "/" + real_path
+                scope["path"] = real_path
 
-            # Extract matched path from headers
-            matched = (
-                headers_decoded.get("x-matched-path")
-                or headers_decoded.get("x-forwarded-uri")
-                or headers_decoded.get("x-invoke-path")
-                or headers_decoded.get("x-original-url")
-            )
-            if matched:
-                path_only = matched.split("?")[0]
-                if path_only and not path_only.startswith("/api/index.py"):
-                    scope["path"] = path_only
-                elif path_only == "/api/index.py":
-                    scope["path"] = "/"
+                # Remove internal __path from query string
+                clean_params = {k: v for k, v in params.items() if k != "__path"}
+                scope["query_string"] = urllib.parse.urlencode(clean_params, doseq=True).encode("latin1")
             elif scope.get("path") == "/api/index.py":
                 scope["path"] = "/"
 
