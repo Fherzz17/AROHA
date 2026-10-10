@@ -10,7 +10,7 @@ from services.scoring import calculate_skillpulse_score, EMERGING_FRONTIER_SKILL
 
 def get_executive_dashboard_kpis() -> Dict[str, Any]:
     """
-    Computes top-level KPIs from the real SAS hackathon datasets.
+    Computes top-level KPIs from real labor market benchmark datasets.
     """
     aj = data_service.get_analytics_jobs()
     ds = data_service.get_datascience_jobs()

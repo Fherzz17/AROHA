@@ -1,7 +1,7 @@
 """
-AROHA - AI Skill Intelligence Platform
-Team: Syntax Society | SAS Hackathon Edition
-"Don't just prepare for today's jobs — prepare for tomorrow's skills."
+AROHA - AI Workforce & Skill Intelligence Platform
+Enterprise Product Edition
+"Don't just prepare for today's jobs — build for tomorrow's skills."
 """
 
 import streamlit as st
@@ -29,7 +29,7 @@ from utils.constants import TARGET_ROLES, ROLE_SKILL_PROFILES
 
 # ----------------- Page Configuration ----------------- #
 st.set_page_config(
-    page_title="AROHA | SAS Analytics Intelligence",
+    page_title="AROHA | AI Workforce & Skill Intelligence",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -276,12 +276,12 @@ with st.sidebar:
         </div>
         <div>
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #ffffff;">AROHA</h3>
-            <span style="font-size: 0.72rem; color: #38bdf8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;">Team Syntax Society</span>
+            <span style="font-size: 0.72rem; color: #38bdf8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;">Enterprise Intelligence</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
-    st.caption('*"Don\'t just prepare for today\'s jobs — prepare for tomorrow\'s skills."*')
+    st.caption('*"Don\'t just prepare for today\'s jobs — build for tomorrow\'s skills."*')
     st.divider()
 
     nav_selection = st.radio(
@@ -294,7 +294,7 @@ with st.sidebar:
             "🎯 Success Intelligence (ML)",
             "🚀 Emerging Signals",
             "🧠 Skill Gap & Roadmap",
-            "ℹ️ Data Quality & SAS Audit"
+            "ℹ️ Data Quality & Pipeline Audit"
         ],
         index=0
     )
@@ -303,7 +303,7 @@ with st.sidebar:
     st.markdown("""
     <div style="font-size: 0.8rem; color: #94a3b8; line-height: 1.8;">
         <strong>Data Provenance Badges:</strong><br>
-        <span class="data-badge-observed">[OBSERVED]</span> Real SAS Datasets<br>
+        <span class="data-badge-observed">[OBSERVED]</span> Verified Market Records<br>
         <span class="data-badge-model">[MODEL OUTPUT]</span> ML Predictive Inference<br>
         <span class="data-badge-signal">[ANALYTICAL SIGNAL]</span> Scoring Metric<br>
         <span class="data-badge-illustrative">[ILLUSTRATIVE]</span> Future Scenario
@@ -338,12 +338,12 @@ if nav_selection == "📊 Dashboard":
         <div class="top-header-titles">
             <h1>Executive Market Intelligence Dashboard</h1>
             <div class="top-header-tagline">
-                Transforming empirical Indian tech-market postings into forward-looking decision support.
+                Transforming empirical tech-market postings into forward-looking decision support.
             </div>
         </div>
         <div>
             <span class="data-badge-observed">[OBSERVED DATASET SNAPSHOT]</span>
-            <span class="data-badge-signal">[SAS DECISION SUPPORT]</span>
+            <span class="data-badge-signal">[ENTERPRISE DECISION SUPPORT]</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -745,7 +745,7 @@ elif nav_selection == "💼 Market Intelligence":
         st.dataframe(assoc_df, use_container_width=True)
 
 # ========================================================================= #
-# 5. CAREER SUCCESS INTELLIGENCE (SAS ML MODULE)
+# 5. CAREER SUCCESS INTELLIGENCE (ML MODULE)
 # ========================================================================= #
 elif nav_selection == "🎯 Success Intelligence (ML)":
     st.markdown("""
@@ -758,7 +758,7 @@ elif nav_selection == "🎯 Success Intelligence (ML)":
         </div>
         <div>
             <span class="data-badge-model">[PREDICTIVE ML MODEL]</span>
-            <span class="data-badge-observed">[SAS BENCHMARK SAMPLES]</span>
+            <span class="data-badge-observed">[VERIFIED CAREER BENCHMARKS]</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1017,27 +1017,28 @@ elif nav_selection == "🧠 Skill Gap & Roadmap":
         """, unsafe_allow_html=True)
 
 # ========================================================================= #
-# 8. ABOUT & DATA QUALITY (SAS REPORT)
 # ========================================================================= #
-elif nav_selection == "ℹ️ Data Quality & SAS Audit":
+# 8. ABOUT & DATA QUALITY AUDIT
+# ========================================================================= #
+elif nav_selection == "ℹ️ Data Quality & Pipeline Audit":
     st.markdown("""
     <div class="top-header-banner">
         <div class="top-header-titles">
             <h1>Data Exploration, Preparation & Quality Audit</h1>
             <div class="top-header-tagline">
-                Rigorous transparency report addressing the SAS Hackathon judging framework criteria.
+                Rigorous transparency report validating data integrity and mathematical pipeline reproducibility.
             </div>
         </div>
         <div>
-            <span class="data-badge-observed">[SAS CRITERIA EVALUATION]</span>
+            <span class="data-badge-observed">[PRODUCTION DATA AUDIT]</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("""
     <div class="sas-callout">
-        <strong>SAS Evaluation Alignment:</strong> The judging rubrics prioritize 
-        <em>Data Exploration and Preparation, Approach, Statistical and Machine Learning Techniques, Results, and Business/Stakeholder Implications.</em>
+        <strong>Enterprise Data Governance:</strong> AROHA adheres to stringent data quality benchmarks across 
+        <em>Data Ingestion, Preparation, Statistical Modeling, and Actionable Evidence-Based Recommendations.</em>
         Below is our comprehensive, transparent data preparation audit.
     </div>
     """, unsafe_allow_html=True)
@@ -1090,10 +1091,10 @@ elif nav_selection == "ℹ️ Data Quality & SAS Audit":
         """)
 
     st.markdown("---")
-    st.markdown("### Team & Project Compliance")
+    st.markdown("### Platform Standards & Specifications")
     st.markdown("""
-    - **Team:** Syntax Society
-    - **Event:** SAS Hackathon 2026 (7 October)
-    - **Tagline:** *"Don't just prepare for today's jobs — prepare for tomorrow's skills."*
+    - **Platform:** AROHA Enterprise Workforce Intelligence
+    - **Release:** v1.0.0 Production Release
+    - **Tagline:** *"Don't just prepare for today's jobs — build for tomorrow's skills."*
     - **Run Command:** `streamlit run app.py`
     """)

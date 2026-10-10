@@ -1,7 +1,7 @@
 """
 AROHA - Application Launcher
-Team: Syntax Society - SAS Hackathon Edition (7 October)
-"Don't just prepare for today's jobs — prepare for tomorrow's skills."
+Enterprise Product Edition
+"Don't just prepare for today's jobs — build for tomorrow's skills."
 """
 
 import sys
@@ -23,9 +23,9 @@ def open_browser(url: str):
 
 def main():
     print("=" * 70)
-    print("                 AROHA - AI SKILL INTELLIGENCE                 ")
-    print("          Team: Syntax Society | SAS Hackathon Edition         ")
-    print("    'Don't just prepare for today's jobs — prepare for tomorrow's skills.' ")
+    print("                 AROHA - AI WORKFORCE INTELLIGENCE             ")
+    print("                      Enterprise Product Edition               ")
+    print("    'Don't just prepare for today's jobs — build for tomorrow's skills.' ")
     print("=" * 70)
 
     # Check if user explicitly wants FastAPI backend
@@ -37,7 +37,7 @@ def main():
         print("[AROHA] Interactive API documentation at http://127.0.0.1:8000/docs")
         uvicorn.run("backend.app:app", host="127.0.0.1", port=8000, reload=False, log_level="info")
     else:
-        # Default: Launch Streamlit application (SAS Hackathon primary interface)
+        # Default: Launch Streamlit web dashboard
         if "--no-browser" not in sys.argv:
             threading.Thread(target=open_browser, args=("http://localhost:8501",), daemon=True).start()
         print("\n[AROHA] Launching Streamlit decision-support application at http://localhost:8501 ...")

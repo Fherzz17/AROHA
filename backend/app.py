@@ -33,7 +33,7 @@ from utils.constants import TARGET_ROLES
 
 app = FastAPI(
     title="AROHA API",
-    description="AI-Powered Skill Intelligence Platform for Indian Tech Market - Team Syntax Society",
+    description="AI-Powered Workforce & Skill Intelligence Platform (Enterprise API)",
     version="1.0.0"
 )
 

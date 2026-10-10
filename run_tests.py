@@ -27,11 +27,11 @@ def run_all_tests():
             ("Complex JD Extraction", test_skill_extractor.test_complex_job_description_extraction),
             ("Role Alignment Scoring", test_skill_extractor.test_role_alignment_scoring),
         ]),
-        ("SAS Machine Learning & Data Quality", [
+        ("Predictive Machine Learning & Data Quality", [
             ("Salary Parsing Logic", test_sas_models.test_salary_parsing),
             ("JDS Career Advancement ML Model", test_sas_models.test_jds_model_training_and_prediction),
             ("SDS Personality Success ML Model", test_sas_models.test_sds_model_training_and_prediction),
-            ("SAS Data Quality Audit Report", test_sas_models.test_data_quality_report),
+            ("Data Quality Audit Report", test_sas_models.test_data_quality_report),
             ("Model Accuracy & Cross-Validation", test_sas_models.test_model_accuracy_cross_validation),
         ]),
         ("SkillPulse Score & Market Intelligence", [
@@ -65,7 +65,7 @@ def run_all_tests():
     start_total = time.perf_counter()
 
     print("=" * 65)
-    print("   SKILLPULSE BHARAT - MVP TEST SUITE (Syntax Society)   ")
+    print("           AROHA - PRODUCT VERIFICATION TEST SUITE             ")
     print("=" * 65)
 
     for suite_name, test_cases in modules:
