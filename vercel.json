@@ -3,14 +3,7 @@
   "version": 2,
   "functions": {
     "api/index.py": {
-      "includeFiles": [
-        "backend/**",
-        "models/**",
-        "services/**",
-        "utils/**",
-        "frontend/**",
-        "data/**"
-      ]
+      "includeFiles": "{backend,models,services,utils,frontend,data}/**"
     }
   },
   "rewrites": [
