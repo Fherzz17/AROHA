@@ -18,6 +18,7 @@ from tests import test_recommender
 from tests import test_api
 from tests import test_sas_models
 from tests import test_scoring
+from tests import test_auth
 
 def run_all_tests():
     modules = [
@@ -57,6 +58,14 @@ def run_all_tests():
             ("Emerging Skills Endpoint", test_api.test_api_emerging),
             ("Recommendation Endpoint", test_api.test_api_recommend),
             ("NLP Extraction Endpoint", test_api.test_api_extract),
+        ]),
+        ("User Authentication & Multi-Role Access", [
+            ("Student Registration & Login", test_auth.test_auth_student_registration_and_login),
+            ("Recruiter Registration & Login", test_auth.test_auth_recruiter_registration_and_login),
+            ("Educator Registration", test_auth.test_auth_educator_registration),
+            ("Duplicate Email Prevention", test_auth.test_auth_duplicate_email_prevention),
+            ("Session Verification & Logout", test_auth.test_auth_session_me_and_logout),
+            ("Social SSO OAuth Simulation", test_auth.test_auth_social_login),
         ])
     ]
 

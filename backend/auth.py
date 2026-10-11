@@ -1,8 +1,7 @@
 """
-Authentication and User Management Module for SkillPulse Bharat
-Supports multi-role logins (Student, Recruiter, Other/Educator),
-email/password auth, social login simulations, and demo fast-logins.
-Team: Syntax Society
+Authentication and User Management Module for AROHA
+Supports multi-role registration and login (Student, Recruiter, Other/Educator),
+email/password auth, session management, and social SSO.
 """
 
 import os
@@ -19,9 +18,7 @@ from fastapi import APIRouter, HTTPException, Depends, Header
 from pydantic import BaseModel, EmailStr, Field
 
 # Market data is shipped read-only. On Vercel, the deployed filesystem is
-# read-only, so authentication uses a per-instance copy in /tmp. This keeps
-# the demo login functional while making the serverless storage limitation
-# explicit; a production deployment should use a managed database instead.
+# read-only, so authentication uses a per-instance copy in /tmp.
 PROJECT_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "job_market.db"
 if os.getenv("VERCEL"):
     DB_PATH = Path("/tmp") / "aroha_auth.db"
@@ -61,7 +58,7 @@ def verify_password(password: str, stored_hash: str) -> bool:
 
 
 def init_auth_db():
-    """Initializes user and session tables, and pre-seeds demo accounts."""
+    """Initializes user and session tables for registered users."""
     with get_connection() as conn:
         cursor = conn.cursor()
         
@@ -91,55 +88,6 @@ def init_auth_db():
                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
             )
         """)
-        conn.commit()
-
-        # Seed Demo Accounts if not present
-        demo_accounts = [
-            {
-                "name": "Aarav Sharma",
-                "email": "student@skillpulse.in",
-                "password": "Password@123",
-                "role": "student",
-                "organization": "IIT Bombay",
-                "target_role": "Data Scientist",
-                "domain": "AI / Data Science"
-            },
-            {
-                "name": "Priya Patel",
-                "email": "recruiter@techhire.in",
-                "password": "Password@123",
-                "role": "recruiter",
-                "organization": "Zomato Talent Acquisition",
-                "target_role": "Tech Recruiter",
-                "domain": "Cloud & AI Talent"
-            },
-            {
-                "name": "Dr. Ramesh Verma",
-                "email": "educator@academia.in",
-                "password": "Password@123",
-                "role": "other",
-                "organization": "National Skill Development Council (NSDC)",
-                "target_role": "Curriculum Advisor",
-                "domain": "EdTech & Skills Policy"
-            }
-        ]
-
-        for acc in demo_accounts:
-            cursor.execute("SELECT id FROM users WHERE lower(email) = lower(?)", (acc["email"],))
-            if not cursor.fetchone():
-                pw_hash = hash_password(acc["password"])
-                cursor.execute("""
-                    INSERT INTO users (name, email, password_hash, role, organization, target_role, domain, auth_provider)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, 'local')
-                """, (
-                    acc["name"],
-                    acc["email"].lower(),
-                    pw_hash,
-                    acc["role"],
-                    acc["organization"],
-                    acc["target_role"],
-                    acc["domain"]
-                ))
         conn.commit()
 
 
@@ -251,7 +199,7 @@ async def register(payload: RegisterRequest):
     token = create_session(user_id)
     return {
         "success": True,
-        "message": f"Welcome to SkillPulse Bharat, {payload.name}!",
+        "message": f"Welcome to AROHA, {payload.name}!",
         "token": token,
         "user": {
             "id": user_id,
@@ -398,30 +346,6 @@ async def reset_password(payload: ResetPasswordRequest):
 
 @auth_router.get("/demo-accounts")
 async def get_demo_accounts():
-    """Returns demo credentials for 1-click evaluation."""
-    return {
-        "student": {
-            "role": "student",
-            "name": "Aarav Sharma (Student)",
-            "email": "student@skillpulse.in",
-            "password": "Password@123",
-            "organization": "IIT Bombay",
-            "target_role": "Data Scientist"
-        },
-        "recruiter": {
-            "role": "recruiter",
-            "name": "Priya Patel (Recruiter)",
-            "email": "recruiter@techhire.in",
-            "password": "Password@123",
-            "organization": "Zomato Talent Acquisition",
-            "domain": "Cloud & AI Talent"
-        },
-        "other": {
-            "role": "other",
-            "name": "Dr. Ramesh Verma (Educator / Policy)",
-            "email": "educator@academia.in",
-            "password": "Password@123",
-            "organization": "National Skill Development Council (NSDC)",
-            "domain": "EdTech & Skills Policy"
-        }
-    }
+    """Demo accounts are disabled. Real user registration and sign-in are active."""
+    return {}
+

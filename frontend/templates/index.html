@@ -116,15 +116,12 @@
             <!-- Dropdown Menu -->
             <div class="user-dropdown-menu" id="user-dropdown-menu">
               <div class="dropdown-user-header">
-                <b id="dd-user-name">Aarav Sharma</b>
-                <small id="dd-user-email">student@skillpulse.in</small>
-                <div class="dropdown-user-meta" id="dd-user-org">IIT Bombay</div>
+                <b id="dd-user-name">Active User</b>
+                <small id="dd-user-email">user@domain.com</small>
+                <div class="dropdown-user-meta" id="dd-user-org">Verified Profile</div>
               </div>
               <button class="dropdown-item-btn" onclick="switchView('auth'); closeUserDropdown();">
                 <span>Account & Profile</span>
-              </button>
-              <button class="dropdown-item-btn" onclick="switchRoleDemoModal(); closeUserDropdown();">
-                <span>Switch Role / Quick Demo</span>
               </button>
               <button class="dropdown-item-btn logout" onclick="handleLogout()">
                 <span>Sign Out</span>
@@ -429,8 +426,27 @@
               </div>
             </div>
             <select id="role-selector" style="background-color: var(--bg-dark); color: #ffffff; border: 1px solid var(--border-subtle); padding: 10px 18px; border-radius: var(--radius-md); font-size: 0.95rem; outline: none; min-width: 240px;">
-              <!-- Populated by JS -->
+              <option value="Data Scientist" selected>Data Scientist</option>
+              <option value="Data Analyst">Data Analyst</option>
+              <option value="AI/ML Engineer">AI/ML Engineer</option>
+              <option value="Python Developer">Python Developer</option>
+              <option value="Software Developer">Software Developer</option>
+              <option value="Cloud/DevOps Architect">Cloud/DevOps Architect</option>
+              <option value="Fullstack Developer">Fullstack Developer</option>
+              <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
             </select>
+          </div>
+
+          <!-- Suggested Target Role Quick Selection Bar -->
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; align-items: center;">
+            <span style="font-size: 0.8rem; color: #94a3b8; font-weight: 600;">Popular Career Roles:</span>
+            <button type="button" class="quick-chip" onclick="selectCareerRoleSuggestion('Data Scientist')">Data Scientist</button>
+            <button type="button" class="quick-chip" onclick="selectCareerRoleSuggestion('Data Analyst')">Data Analyst</button>
+            <button type="button" class="quick-chip" onclick="selectCareerRoleSuggestion('AI/ML Engineer')">AI/ML Engineer</button>
+            <button type="button" class="quick-chip" onclick="selectCareerRoleSuggestion('Python Developer')">Python Developer</button>
+            <button type="button" class="quick-chip" onclick="selectCareerRoleSuggestion('Cloud/DevOps Architect')">Cloud/DevOps Architect</button>
+            <button type="button" class="quick-chip" onclick="selectCareerRoleSuggestion('Fullstack Developer')">Fullstack Developer</button>
+            <button type="button" class="quick-chip" onclick="selectCareerRoleSuggestion('Cybersecurity Analyst')">Cybersecurity Analyst</button>
           </div>
 
           <!-- Role Banner -->
@@ -525,8 +541,27 @@
               <div>
                 <label style="font-size: 0.85rem; font-weight: 600; color: #ffffff; display: block; margin-bottom: 8px;">1. Target Career Role</label>
                 <select id="rec-target-role" style="width: 100%; background-color: var(--bg-dark); color: #ffffff; border: 1px solid var(--border-subtle); padding: 11px 14px; border-radius: var(--radius-md); font-size: 0.92rem; outline: none;">
-                  <!-- Populated by JS -->
+                  <option value="Data Analyst" selected>Data Analyst</option>
+                  <option value="Data Scientist">Data Scientist</option>
+                  <option value="AI/ML Engineer">AI/ML Engineer</option>
+                  <option value="Python Developer">Python Developer</option>
+                  <option value="Software Developer">Software Developer</option>
+                  <option value="Cloud/DevOps Architect">Cloud/DevOps Architect</option>
+                  <option value="Fullstack Developer">Fullstack Developer</option>
+                  <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
                 </select>
+                <div id="rec-role-suggestions" style="margin-top: 10px;">
+                  <span style="font-size: 0.75rem; color: #94a3b8; display: block; margin-bottom: 6px; font-weight: 600;">Suggested Roles for Quick Selection:</span>
+                  <div id="rec-role-chips-container" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                    <button type="button" class="role-suggestion-chip active" data-role="Data Analyst" onclick="selectTargetRoleSuggestion('Data Analyst')">Data Analyst</button>
+                    <button type="button" class="role-suggestion-chip" data-role="Data Scientist" onclick="selectTargetRoleSuggestion('Data Scientist')">Data Scientist</button>
+                    <button type="button" class="role-suggestion-chip" data-role="AI/ML Engineer" onclick="selectTargetRoleSuggestion('AI/ML Engineer')">AI/ML Engineer</button>
+                    <button type="button" class="role-suggestion-chip" data-role="Python Developer" onclick="selectTargetRoleSuggestion('Python Developer')">Python Developer</button>
+                    <button type="button" class="role-suggestion-chip" data-role="Cloud/DevOps Architect" onclick="selectTargetRoleSuggestion('Cloud/DevOps Architect')">Cloud/DevOps</button>
+                    <button type="button" class="role-suggestion-chip" data-role="Fullstack Developer" onclick="selectTargetRoleSuggestion('Fullstack Developer')">Fullstack</button>
+                    <button type="button" class="role-suggestion-chip" data-role="Cybersecurity Analyst" onclick="selectTargetRoleSuggestion('Cybersecurity Analyst')">Cybersecurity</button>
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -774,9 +809,6 @@
                     <button class="btn-primary" onclick="switchView('dashboard')">
                       <span>Return to Dashboard</span>
                     </button>
-                    <button class="btn-secondary" onclick="switchRoleDemoModal()">
-                      <span>Switch Role / Demo</span>
-                    </button>
                     <button class="btn-secondary" style="border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;" onclick="handleLogout()">
                       <span>Sign Out</span>
                     </button>
@@ -848,7 +880,7 @@
                 <form id="form-signin" onsubmit="handleSignInSubmit(event)">
                   <div class="auth-form-group">
                     <label for="signin-email">Email Address or Username</label>
-                    <input type="email" id="signin-email" class="auth-input" placeholder="e.g., student@skillpulse.in" required autocomplete="username">
+                    <input type="email" id="signin-email" class="auth-input" placeholder="e.g., yourname@domain.com" required autocomplete="username">
                   </div>
 
                   <div class="auth-form-group">
@@ -869,6 +901,10 @@
                   <button type="submit" class="btn-auth-submit" id="btn-submit-signin">
                     <span id="signin-btn-text">Sign In as Student ➔</span>
                   </button>
+
+                  <div class="auth-toggle-prompt" style="text-align: center; margin-top: 14px; font-size: 0.85rem; color: #94a3b8;">
+                    Don't have an account yet? <a href="javascript:void(0)" onclick="setAuthMode('signup')" style="color: #38bdf8; font-weight: 600; text-decoration: underline;">Create New Account</a>
+                  </div>
                 </form>
 
                 <!-- 2. SIGN UP FORM -->
@@ -922,6 +958,10 @@
                   <button type="submit" class="btn-auth-submit" id="btn-submit-signup">
                     <span id="signup-btn-text">Create Student Account ➔</span>
                   </button>
+
+                  <div class="auth-toggle-prompt" style="text-align: center; margin-top: 14px; font-size: 0.85rem; color: #94a3b8;">
+                    Already have an account? <a href="javascript:void(0)" onclick="setAuthMode('signin')" style="color: #38bdf8; font-weight: 600; text-decoration: underline;">Sign In here</a>
+                  </div>
                 </form>
 
                 <!-- Social SSO Authentication -->
@@ -965,33 +1005,6 @@
                   </button>
                 </div>
 
-                <!-- 1-Click Fast Demo Accounts Bar -->
-                <div class="demo-accounts-box">
-                  <div class="demo-accounts-header">
-                    <span>Quick evaluation accounts</span>
-                    <small style="color: #94a3b8; font-size: 0.72rem;">Instant sign-in without manual typing</small>
-                  </div>
-                  <div class="demo-chips-grid">
-                    <button type="button" class="demo-chip-btn" onclick="quickLoginDemo('student')">
-                      <span class="demo-chip-role" style="color: #38bdf8;">Demo Student</span>
-                      <span class="demo-chip-email">student@skillpulse.in</span>
-                      <small style="color: #94a3b8; font-size: 0.65rem;">Aarav • IIT Bombay</small>
-                    </button>
-
-                    <button type="button" class="demo-chip-btn" onclick="quickLoginDemo('recruiter')">
-                      <span class="demo-chip-role" style="color: #34d399;">Demo Recruiter</span>
-                      <span class="demo-chip-email">recruiter@techhire.in</span>
-                      <small style="color: #94a3b8; font-size: 0.65rem;">Priya • Zomato Talent</small>
-                    </button>
-
-                    <button type="button" class="demo-chip-btn" onclick="quickLoginDemo('other')">
-                      <span class="demo-chip-role" style="color: #c084fc;">Demo Educator</span>
-                      <span class="demo-chip-email">educator@academia.in</span>
-                      <small style="color: #94a3b8; font-size: 0.65rem;">Dr. Ramesh • NSDC</small>
-                    </button>
-                  </div>
-                </div>
-
               </div> <!-- End auth-forms-view -->
 
             </div>
@@ -1011,7 +1024,7 @@
             <form onsubmit="handleResetPasswordSubmit(event)">
               <div class="auth-form-group">
                 <label for="reset-email">Registered Email Address</label>
-                <input type="email" id="reset-email" class="auth-input" placeholder="e.g. student@skillpulse.in" required>
+                <input type="email" id="reset-email" class="auth-input" placeholder="e.g. yourname@domain.com" required>
               </div>
               <div class="auth-form-group">
                 <label for="reset-new-password">New Password (min 6 characters)</label>
@@ -1021,6 +1034,37 @@
               <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
                 <button type="button" class="btn-secondary" onclick="closeForgotPasswordModal()">Cancel</button>
                 <button type="submit" class="btn-primary">Update Password ➔</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Social SSO Authentication Modal (Google, LinkedIn, GitHub, Microsoft) -->
+        <div class="auth-modal-backdrop" id="auth-social-modal" onclick="closeSocialAuthModal(event)">
+          <div class="auth-modal-window" onclick="event.stopPropagation()">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div id="social-modal-icon"></div>
+                <h3 id="social-modal-title" style="font-size: 1.15rem; color: #ffffff; margin: 0;">Sign in with Google</h3>
+              </div>
+              <button onclick="closeSocialAuthModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✕</button>
+            </div>
+            <p id="social-modal-desc" style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 16px; line-height: 1.5;">
+              Connect your account to access AROHA instantly without needing a password.
+            </p>
+            <form onsubmit="handleSocialModalSubmit(event)">
+              <div class="auth-form-group">
+                <label for="social-input-name">Your Full Name</label>
+                <input type="text" id="social-input-name" class="auth-input" placeholder="e.g., Pooja Verma" required>
+              </div>
+              <div class="auth-form-group">
+                <label id="social-input-email-label" for="social-input-email">Your Google Email Address</label>
+                <input type="email" id="social-input-email" class="auth-input" placeholder="e.g., yourname@gmail.com" required>
+              </div>
+              <div id="social-modal-alert" class="auth-alert" style="margin-bottom: 14px; display: none;"></div>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+                <button type="button" class="btn-secondary" onclick="closeSocialAuthModal()">Cancel</button>
+                <button type="submit" class="btn-primary" id="btn-social-modal-submit">Continue with Google ➔</button>
               </div>
             </form>
           </div>

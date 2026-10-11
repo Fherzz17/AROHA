@@ -5,9 +5,20 @@
 
 const API_BASE = window.location.origin;
 
+const DEFAULT_ROLES = [
+  "Data Scientist",
+  "Data Analyst",
+  "AI/ML Engineer",
+  "Python Developer",
+  "Software Developer",
+  "Cloud/DevOps Architect",
+  "Fullstack Developer",
+  "Cybersecurity Analyst"
+];
+
 // State
 let allSkillsList = [];
-let allRolesList = [];
+let allRolesList = [...DEFAULT_ROLES];
 let currentSkill = 'Python';
 let currentRole = 'Data Scientist';
 let userSelectedSkills = ['Python', 'SQL', 'Git'];
@@ -328,20 +339,82 @@ async function searchSkill(skillName) {
 
 // ----------------- Career Explorer ----------------- //
 
+function populateRoleSelectors() {
+  const roleSelect = document.getElementById('role-selector');
+  if (roleSelect) {
+    const currentVal = roleSelect.value || currentRole || 'Data Scientist';
+    roleSelect.innerHTML = allRolesList.map(r => `<option value="${r}">${r}</option>`).join('');
+    if (allRolesList.includes(currentVal)) {
+      roleSelect.value = currentVal;
+    }
+  }
+
+  const recSelect = document.getElementById('rec-target-role');
+  if (recSelect) {
+    const currentVal = recSelect.value || 'Data Analyst';
+    recSelect.innerHTML = allRolesList.map(r => `<option value="${r}">${r}</option>`).join('');
+    if (allRolesList.includes(currentVal)) {
+      recSelect.value = currentVal;
+    }
+    updateActiveRoleChip(recSelect.value);
+  }
+
+  const signupSelect = document.getElementById('signup-target-role');
+  if (signupSelect) {
+    const currentVal = signupSelect.value;
+    signupSelect.innerHTML = allRolesList.map(r => `<option value="${r}">${r}</option>`).join('');
+    if (currentVal && allRolesList.includes(currentVal)) {
+      signupSelect.value = currentVal;
+    }
+  }
+}
+
+function updateActiveRoleChip(roleName) {
+  document.querySelectorAll('#rec-role-chips-container .role-suggestion-chip').forEach(chip => {
+    if (chip.getAttribute('data-role') === roleName) {
+      chip.classList.add('active');
+    } else {
+      chip.classList.remove('active');
+    }
+  });
+}
+
+function selectTargetRoleSuggestion(roleName) {
+  const recSelect = document.getElementById('rec-target-role');
+  if (recSelect) {
+    recSelect.value = roleName;
+    updateActiveRoleChip(roleName);
+    runRecommendationAnalysis();
+  }
+}
+
+function selectCareerRoleSuggestion(roleName) {
+  const roleSelect = document.getElementById('role-selector');
+  if (roleSelect) {
+    roleSelect.value = roleName;
+    loadRoleDetail(roleName);
+  }
+}
+
 async function loadRolesList() {
   try {
     const res = await fetch(`${API_BASE}/api/roles`);
-    const data = await res.json();
-    allRolesList = data.roles;
-
-    const select = document.getElementById('role-selector');
-    if (select) {
-      select.innerHTML = allRolesList.map(r => `<option value="${r}">${r}</option>`).join('');
-      select.value = currentRole;
-      select.addEventListener('change', (e) => loadRoleDetail(e.target.value));
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data.roles) && data.roles.length > 0) {
+        allRolesList = data.roles;
+      }
     }
   } catch (err) {
-    console.error('Failed to load roles list:', err);
+    console.warn('Failed to load roles list from API, keeping default catalog:', err);
+  } finally {
+    populateRoleSelectors();
+  }
+
+  const select = document.getElementById('role-selector');
+  if (select && !select.dataset.bound) {
+    select.dataset.bound = 'true';
+    select.addEventListener('change', (e) => loadRoleDetail(e.target.value));
   }
 }
 
@@ -441,13 +514,15 @@ async function loadEmergingSkills() {
 // ----------------- Skill Gap Recommendations ----------------- //
 
 function setupRecommendationControls() {
+  populateRoleSelectors();
+
   const targetSelect = document.getElementById('rec-target-role');
-  if (targetSelect) {
-    // Populate options
-    setTimeout(() => {
-      targetSelect.innerHTML = allRolesList.map(r => `<option value="${r}">${r}</option>`).join('');
-      targetSelect.value = "Data Analyst";
-    }, 500);
+  if (targetSelect && !targetSelect.dataset.bound) {
+    targetSelect.dataset.bound = 'true';
+    targetSelect.addEventListener('change', (e) => {
+      updateActiveRoleChip(e.target.value);
+      runRecommendationAnalysis();
+    });
   }
 
   renderSelectedUserSkillsChips();
@@ -534,6 +609,29 @@ async function extractResumeSkills(file) {
       count ? `${count} skills found and added to your profile. Your gap analysis has been refreshed.` : 'Your resume was read, but no indexed skills were found. Add skills manually below.',
       count ? 'success' : 'warning'
     );
+    if (Array.isArray(data.top_matching_roles) && data.top_matching_roles.length > 0) {
+      const suggContainer = document.getElementById('rec-role-suggestions');
+      if (suggContainer) {
+        suggContainer.innerHTML = `
+          <span style="font-size: 0.75rem; color: #38bdf8; display: block; margin-bottom: 6px; font-weight: 600;">
+            Suggested Roles from Resume:
+          </span>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+            ${data.top_matching_roles.slice(0, 4).map(r => `
+              <button type="button" class="quick-chip" onclick="selectTargetRoleSuggestion('${r.role}')" style="border-color: #38bdf8; color: #ffffff;">
+                ${r.role} <small style="color: #38bdf8; font-weight: 700;">(${r.match_percentage}%)</small>
+              </button>
+            `).join('')}
+          </div>
+        `;
+      }
+      const topRole = data.top_matching_roles[0].role;
+      const recSelect = document.getElementById('rec-target-role');
+      if (recSelect && allRolesList.includes(topRole)) {
+        recSelect.value = topRole;
+      }
+    }
+
     if (count) runRecommendationAnalysis();
   } catch (error) {
     console.error('Resume extraction error:', error);
@@ -709,9 +807,14 @@ async function runNLPExtraction(text) {
     // Render matched roles
     if (rolesPillContainer) {
       rolesPillContainer.innerHTML = data.top_matching_roles.map(r => `
-        <div style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-weight: 600; color: #ffffff;">${r.role}</span>
-          <span style="font-weight: 700; color: #06b6d4; font-size: 0.95rem;">${r.match_percentage}% Alignment</span>
+        <div style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <span style="font-weight: 600; color: #ffffff;">${r.role}</span>
+            <span style="font-weight: 700; color: #06b6d4; font-size: 0.95rem; margin-left: 10px;">${r.match_percentage}% Alignment</span>
+          </div>
+          <button type="button" class="quick-chip" onclick="selectTargetRoleSuggestion('${r.role}'); switchView('recommend');" style="font-size: 0.75rem;">
+            Set as Target Role ➔
+          </button>
         </div>
       `).join('');
     }
@@ -1035,12 +1138,30 @@ function closeUserDropdown() {
  */
 async function handleSignInSubmit(event) {
   event.preventDefault();
-  const email = document.getElementById('signin-email').value.trim();
-  const password = document.getElementById('signin-password').value;
+  const emailInput = document.getElementById('signin-email');
+  const passwordInput = document.getElementById('signin-password');
+  const email = emailInput ? emailInput.value.trim() : '';
+  const password = passwordInput ? passwordInput.value : '';
   const submitBtn = document.getElementById('btn-submit-signin');
-  const alertBox = document.getElementById('auth-alert');
+  const btnText = document.getElementById('signin-btn-text');
 
-  if (submitBtn) submitBtn.disabled = true;
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    showAuthAlert('Please enter a valid email address.', 'error');
+    if (emailInput) emailInput.focus();
+    return;
+  }
+
+  if (!password) {
+    showAuthAlert('Please enter your password.', 'error');
+    if (passwordInput) passwordInput.focus();
+    return;
+  }
+
+  const originalBtnContent = submitBtn ? submitBtn.innerHTML : '';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span>Verifying credentials...</span>';
+  }
 
   try {
     const res = await fetch(`${API_BASE}/api/auth/login`, {
@@ -1056,8 +1177,11 @@ async function handleSignInSubmit(event) {
     const data = await res.json();
 
     if (!res.ok) {
-      showAuthAlert(data.detail || 'Sign-in failed. Please verify credentials.', 'error');
-      if (submitBtn) submitBtn.disabled = false;
+      showAuthAlert(data.detail || 'Sign-in failed. Please check your credentials.', 'error');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnContent;
+      }
       return;
     }
 
@@ -1066,7 +1190,7 @@ async function handleSignInSubmit(event) {
     localStorage.setItem('skillpulse_auth_user', JSON.stringify(data.user));
     currentUser = data.user;
 
-    showAuthAlert(data.message, 'success');
+    showAuthAlert(data.message || 'Welcome back to AROHA!', 'success');
     updateNavAuthUI();
 
     setTimeout(() => {
@@ -1074,9 +1198,12 @@ async function handleSignInSubmit(event) {
     }, 600);
 
   } catch (err) {
-    showAuthAlert('Unable to reach server. Please check connection.', 'error');
+    showAuthAlert('Unable to reach server. Please ensure the backend is running.', 'error');
   } finally {
-    if (submitBtn) submitBtn.disabled = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnContent;
+    }
   }
 }
 
@@ -1085,19 +1212,39 @@ async function handleSignInSubmit(event) {
  */
 async function handleSignUpSubmit(event) {
   event.preventDefault();
-  const name = document.getElementById('signup-name').value.trim();
-  const email = document.getElementById('signup-email').value.trim();
-  const password = document.getElementById('signup-password').value;
-  const confirmPassword = document.getElementById('signup-confirm-password').value;
+  const nameInput = document.getElementById('signup-name');
+  const emailInput = document.getElementById('signup-email');
+  const passwordInput = document.getElementById('signup-password');
+  const confirmPasswordInput = document.getElementById('signup-confirm-password');
+
+  const name = nameInput ? nameInput.value.trim() : '';
+  const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+  const password = passwordInput ? passwordInput.value : '';
+  const confirmPassword = confirmPasswordInput ? confirmPasswordInput.value : '';
   const submitBtn = document.getElementById('btn-submit-signup');
 
+  if (name.length < 2) {
+    showAuthAlert('Please enter your full name (minimum 2 characters).', 'error');
+    if (nameInput) nameInput.focus();
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    showAuthAlert('Please enter a valid email address.', 'error');
+    if (emailInput) emailInput.focus();
+    return;
+  }
+
   if (password.length < 6) {
-    showAuthAlert('Password must be at least 6 characters.', 'error');
+    showAuthAlert('Password must be at least 6 characters long.', 'error');
+    if (passwordInput) passwordInput.focus();
     return;
   }
 
   if (password !== confirmPassword) {
-    showAuthAlert('Passwords do not match. Please re-enter.', 'error');
+    showAuthAlert('Passwords do not match. Please re-enter your password.', 'error');
+    if (confirmPasswordInput) confirmPasswordInput.focus();
     return;
   }
 
@@ -1117,7 +1264,11 @@ async function handleSignUpSubmit(event) {
     domain = document.getElementById('signup-title')?.value.trim();
   }
 
-  if (submitBtn) submitBtn.disabled = true;
+  const originalBtnContent = submitBtn ? submitBtn.innerHTML : '';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span>Creating Account...</span>';
+  }
 
   try {
     const res = await fetch(`${API_BASE}/api/auth/register`, {
@@ -1128,17 +1279,20 @@ async function handleSignUpSubmit(event) {
         email: email,
         password: password,
         role: currentAuthRole,
-        organization: organization,
-        target_role: targetRole,
-        domain: domain
+        organization: organization || null,
+        target_role: targetRole || null,
+        domain: domain || null
       })
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      showAuthAlert(data.detail || 'Registration failed. Email may already be in use.', 'error');
-      if (submitBtn) submitBtn.disabled = false;
+      showAuthAlert(data.detail || 'Registration failed. This email may already be in use.', 'error');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnContent;
+      }
       return;
     }
 
@@ -1147,132 +1301,166 @@ async function handleSignUpSubmit(event) {
     localStorage.setItem('skillpulse_auth_user', JSON.stringify(data.user));
     currentUser = data.user;
 
-    showAuthAlert(data.message, 'success');
+    showAuthAlert(`Account created successfully! Welcome to AROHA, ${data.user.name}.`, 'success');
     updateNavAuthUI();
 
     setTimeout(() => {
       switchView(getRoleDefaultView());
-    }, 600);
+    }, 700);
 
   } catch (err) {
-    showAuthAlert('Network error during registration.', 'error');
+    showAuthAlert('Network error during registration. Please check your connection.', 'error');
   } finally {
-    if (submitBtn) submitBtn.disabled = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnContent;
+    }
   }
 }
 
-/**
- * Handle Single-Sign-On with Social Providers (Google, LinkedIn, GitHub, Microsoft).
- */
-async function handleSocialAuth(provider) {
-  // Realistic simulated OAuth identity profiles per provider
-  const mockProfiles = {
-    google: {
-      name: currentAuthRole === 'student' ? 'Alex Kumar' : currentAuthRole === 'recruiter' ? 'Kavita Menon' : 'Dr. Ananya Roy',
-      email: `${provider}.${currentAuthRole}@gmail.com`
-    },
-    linkedin: {
-      name: currentAuthRole === 'student' ? 'Pooja Iyer' : currentAuthRole === 'recruiter' ? 'Rajesh Khanna' : 'Prof. Sanjay Rao',
-      email: `${provider}.${currentAuthRole}@linkedin-oauth.com`
-    },
-    github: {
-      name: currentAuthRole === 'student' ? 'Rohan Dev' : currentAuthRole === 'recruiter' ? 'Vikram TechLead' : 'Dr. M. Swaminathan',
-      email: `${provider}.${currentAuthRole}@github-oauth.com`
-    },
-    microsoft: {
-      name: currentAuthRole === 'student' ? 'Ananya Sen' : currentAuthRole === 'recruiter' ? 'Meera Joshi' : 'Dr. H. N. Murthy',
-      email: `${provider}.${currentAuthRole}@outlook.com`
-    }
-  };
+let currentSocialProvider = 'google';
 
-  const profile = mockProfiles[provider] || { name: 'Verified User', email: `user@${provider}.com` };
+const SOCIAL_ICONS = {
+  google: `<svg viewBox="0 0 24 24" width="22" height="22"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>`,
+  linkedin: `<svg viewBox="0 0 24 24" width="22" height="22" fill="#0A66C2"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76c-.97 0-1.75-.79-1.75-1.76s.78-1.76 1.75-1.76 1.75.79 1.75 1.76-.78 1.76-1.75 1.76m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>`,
+  github: `<svg viewBox="0 0 24 24" width="22" height="22" fill="#FFFFFF"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>`,
+  microsoft: `<svg viewBox="0 0 24 24" width="22" height="22"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="13" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="13" width="10" height="10" fill="#00A4EF"/><rect x="13" y="13" width="10" height="10" fill="#FFB900"/></svg>`
+};
+
+/**
+ * Handle Single-Sign-On trigger with Social Providers (Google, LinkedIn, GitHub, Microsoft).
+ * Opens dedicated identity modal allowing the user to sign in with their own account.
+ */
+function handleSocialAuth(provider) {
+  currentSocialProvider = provider;
+  const providerNames = {
+    google: 'Google',
+    linkedin: 'LinkedIn',
+    github: 'GitHub',
+    microsoft: 'Microsoft'
+  };
+  const pName = providerNames[provider] || provider.toUpperCase();
+
+  const titleEl = document.getElementById('social-modal-title');
+  const iconEl = document.getElementById('social-modal-icon');
+  const descEl = document.getElementById('social-modal-desc');
+  const labelEl = document.getElementById('social-input-email-label');
+  const emailInput = document.getElementById('social-input-email');
+  const nameInput = document.getElementById('social-input-name');
+  const submitBtn = document.getElementById('btn-social-modal-submit');
+  const alertEl = document.getElementById('social-modal-alert');
+
+  if (titleEl) titleEl.innerText = `Sign in with ${pName}`;
+  if (iconEl) iconEl.innerHTML = SOCIAL_ICONS[provider] || '';
+  if (descEl) descEl.innerText = `Connect your ${pName} account to access AROHA instantly as a ${currentAuthRole.toUpperCase()} without needing a password.`;
+  if (labelEl) labelEl.innerText = `Your ${pName} Email Address`;
+  if (submitBtn) submitBtn.innerText = `Continue with ${pName} ➔`;
+  if (alertEl) alertEl.style.display = 'none';
+
+  // Pre-fill email and name if user typed anything on main forms
+  const mainEmail = (document.getElementById('signin-email')?.value || document.getElementById('signup-email')?.value || '').trim();
+  const mainName = (document.getElementById('signup-name')?.value || '').trim();
+
+  if (emailInput) {
+    emailInput.placeholder = provider === 'google' ? 'e.g., yourname@gmail.com' :
+                             provider === 'microsoft' ? 'e.g., yourname@outlook.com' :
+                             provider === 'linkedin' ? 'e.g., yourname@domain.com' : 'e.g., username@github.com';
+    if (mainEmail) emailInput.value = mainEmail;
+  }
+  if (nameInput && mainName) nameInput.value = mainName;
+
+  const modal = document.getElementById('auth-social-modal');
+  if (modal) modal.classList.add('active');
+}
+
+function closeSocialAuthModal(e) {
+  if (e && e.target && e.target.id !== 'auth-social-modal') return;
+  const modal = document.getElementById('auth-social-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+async function handleSocialModalSubmit(event) {
+  event.preventDefault();
+  const name = document.getElementById('social-input-name').value.trim();
+  const email = document.getElementById('social-input-email').value.trim().toLowerCase();
+  const submitBtn = document.getElementById('btn-social-modal-submit');
+  const alertEl = document.getElementById('social-modal-alert');
+
+  if (!email || !email.includes('@')) {
+    if (alertEl) {
+      alertEl.className = 'auth-alert error';
+      alertEl.innerText = 'Please provide a valid email address.';
+      alertEl.style.display = 'block';
+    }
+    return;
+  }
+
+  const pName = currentSocialProvider.toUpperCase();
+  const originalBtn = submitBtn ? submitBtn.innerText : '';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerText = `Connecting via ${pName}...`;
+  }
 
   try {
-    showAuthAlert(`Connecting to ${provider.toUpperCase()} Single Sign-On...`, 'success');
-
     const res = await fetch(`${API_BASE}/api/auth/social-login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        provider: provider,
-        name: profile.name,
-        email: profile.email,
+        provider: currentSocialProvider,
+        name: name || 'Verified User',
+        email: email,
         role: currentAuthRole,
-        organization: currentAuthRole === 'student' ? 'Tech University' : currentAuthRole === 'recruiter' ? 'Tech Talent Hub' : 'Policy Council'
+        organization: currentAuthRole === 'student' ? 'Tech University' : currentAuthRole === 'recruiter' ? 'Tech Enterprise' : 'Academic Council'
       })
     });
 
     const data = await res.json();
     if (!res.ok) {
-      showAuthAlert(data.detail || 'SSO authentication failed.', 'error');
+      if (alertEl) {
+        alertEl.className = 'auth-alert error';
+        alertEl.innerText = data.detail || 'Social sign-in failed. Please try again.';
+        alertEl.style.display = 'block';
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalBtn;
+      }
       return;
     }
 
+    // Success
     localStorage.setItem('skillpulse_auth_token', data.token);
     localStorage.setItem('skillpulse_auth_user', JSON.stringify(data.user));
     currentUser = data.user;
 
-    showAuthAlert(`Connected via ${provider.toUpperCase()} as ${currentUser.name}.`, 'success');
-    updateNavAuthUI();
+    if (alertEl) {
+      alertEl.className = 'auth-alert success';
+      alertEl.innerText = `Authenticated successfully as ${currentUser.name}! Redirecting...`;
+      alertEl.style.display = 'block';
+    }
 
     setTimeout(() => {
+      closeSocialAuthModal();
+      updateNavAuthUI();
+      showAuthAlert(`Signed in with ${pName} as ${currentUser.name}.`, 'success');
       switchView(getRoleDefaultView());
     }, 600);
 
   } catch (err) {
-    showAuthAlert('SSO error encountered.', 'error');
-  }
-}
-
-/**
- * 1-Click Fast Demo Login for instant testing.
- */
-async function quickLoginDemo(role) {
-  const credentials = {
-    student: { email: 'student@skillpulse.in', password: 'Password@123' },
-    recruiter: { email: 'recruiter@techhire.in', password: 'Password@123' },
-    other: { email: 'educator@academia.in', password: 'Password@123' }
-  };
-
-  const cred = credentials[role];
-  if (!cred) return;
-
-  selectAuthRole(role);
-
-  try {
-    showAuthAlert(`Authenticating demo account for ${role.toUpperCase()}...`, 'success');
-
-    const res = await fetch(`${API_BASE}/api/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: cred.email,
-        password: cred.password,
-        role: role
-      })
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      showAuthAlert(data.detail || 'Quick demo login failed.', 'error');
-      return;
+    if (alertEl) {
+      alertEl.className = 'auth-alert error';
+      alertEl.innerText = 'Unable to reach authentication server. Please check connection.';
+      alertEl.style.display = 'block';
     }
-
-    localStorage.setItem('skillpulse_auth_token', data.token);
-    localStorage.setItem('skillpulse_auth_user', JSON.stringify(data.user));
-    currentUser = data.user;
-
-    updateNavAuthUI();
-    showAuthAlert(`Loaded ${role.toUpperCase()} profile: ${currentUser.name}`, 'success');
-
-    setTimeout(() => {
-      switchView(getRoleDefaultView());
-    }, 500);
-
-  } catch (err) {
-    showAuthAlert('Unable to log in with demo account.', 'error');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerText = originalBtn;
+    }
   }
 }
+
 
 /**
  * Sign out active user.
@@ -1447,14 +1635,5 @@ function handleWelcomeBannerAction() {
   }
 }
 
-/**
- * Quick switch modal or action.
- */
-function switchRoleDemoModal() {
-  switchView('auth');
-  const formsView = document.getElementById('auth-forms-view');
-  const loggedInView = document.getElementById('auth-logged-in-view');
-  if (formsView) formsView.style.display = 'block';
-  if (loggedInView) loggedInView.style.display = 'none';
-}
+
 

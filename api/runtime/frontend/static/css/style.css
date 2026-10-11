@@ -1057,9 +1057,43 @@ input, select, textarea, .search-input, .nlp-textarea {
   border-color: var(--border-subtle) !important;
   border-radius: 4px !important;
 }
+select option {
+  background: #171717 !important;
+  color: #ffffff !important;
+  padding: 8px 12px !important;
+  font-size: 0.92rem !important;
+}
 input:focus, select:focus, textarea:focus, .search-input:focus, .nlp-textarea:focus {
   border-color: var(--primary) !important;
   box-shadow: 0 0 0 3px rgba(255, 93, 56, .13) !important;
+}
+
+.role-suggestion-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.role-suggestion-chip:hover {
+  background: rgba(255, 93, 56, 0.15);
+  border-color: var(--primary);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+.role-suggestion-chip.active {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #171717 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(255, 93, 56, 0.35);
 }
 
 .btn-primary {

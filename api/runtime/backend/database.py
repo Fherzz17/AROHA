@@ -4,14 +4,32 @@ Provides modular query interfaces for SQLite benchmark storage.
 Team: Syntax Society
 """
 
+import os
+import shutil
 import sqlite3
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
-DB_PATH = Path(__file__).resolve().parent.parent / "data" / "job_market.db"
+PROJECT_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "job_market.db"
+
+def get_db_path() -> Path:
+    if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+        tmp_db = Path("/tmp") / "aroha_auth.db"
+        if not tmp_db.exists() and PROJECT_DB_PATH.exists():
+            try:
+                shutil.copy2(PROJECT_DB_PATH, tmp_db)
+            except Exception:
+                return PROJECT_DB_PATH
+        if tmp_db.exists():
+            return tmp_db
+    return PROJECT_DB_PATH
 
 def get_connection() -> sqlite3.Connection:
-    conn = sqlite3.connect(DB_PATH)
+    target_path = get_db_path()
+    try:
+        conn = sqlite3.connect(target_path)
+    except sqlite3.OperationalError:
+        conn = sqlite3.connect(f"file:{target_path.as_posix()}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     return conn
 
