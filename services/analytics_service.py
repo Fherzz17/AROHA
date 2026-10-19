@@ -9,88 +9,20 @@ from backend import database
 from services.trend_forecaster import forecast_skill_trend
 from utils.constants import ROLE_SKILL_PROFILES, SKILL_TAXONOMY
 
-EMERGING_SKILLS_CATALOG = [
-    {
-        "skill_name": "Generative AI",
-        "category": "Emerging & Frontier AI",
-        "growth_rate_pct": 142.5,
-        "momentum_score": 98,
-        "adoption_stage": "Rapid Expansion",
-        "description": "Enterprise implementation of foundation models, text-to-code, synthetic data generation, and custom inference.",
-        "target_roles": ["AI/ML Engineer", "Data Scientist", "Software Developer", "Python Developer"],
-        "forecast_note": "Expected to be specified in >35% of senior engineering postings across Indian GCCs by late 2026."
-    },
-    {
-        "skill_name": "RAG",
-        "category": "Emerging & Frontier AI",
-        "growth_rate_pct": 185.0,
-        "momentum_score": 96,
-        "adoption_stage": "Early Mainstream",
-        "description": "Retrieval-Augmented Generation connecting LLMs to private enterprise databases, vector indices, and document stores.",
-        "target_roles": ["AI/ML Engineer", "Data Scientist", "Python Developer"],
-        "forecast_note": "Primary production pattern for domain-specific conversational AI applications."
-    },
-    {
-        "skill_name": "LLMs",
-        "category": "Emerging & Frontier AI",
-        "growth_rate_pct": 130.4,
-        "momentum_score": 94,
-        "adoption_stage": "High Momentum",
-        "description": "Fine-tuning, prompt optimization, quantization, and evaluation of proprietary and open-weights Large Language Models.",
-        "target_roles": ["AI/ML Engineer", "Data Scientist"],
-        "forecast_note": "Surging demand across FinTech risk modeling and enterprise customer experience automation."
-    },
-    {
-        "skill_name": "MLOps",
-        "category": "Emerging & Frontier AI",
-        "growth_rate_pct": 88.2,
-        "momentum_score": 91,
-        "adoption_stage": "Production Standard",
-        "description": "Continuous training, model registry, drift monitoring, GPU orchestration, and latency-optimized deployment pipelines.",
-        "target_roles": ["AI/ML Engineer", "Cloud/DevOps Architect", "Data Scientist"],
-        "forecast_note": "Critical operational bridge between data science experimentation and scalable production systems."
-    },
-    {
-        "skill_name": "Agentic AI",
-        "category": "Emerging & Frontier AI",
-        "growth_rate_pct": 210.0,
-        "momentum_score": 95,
-        "adoption_stage": "Frontier Innovation",
-        "description": "Autonomous multi-agent workflows using tool execution, self-reflection, planning loops, and memory architectures.",
-        "target_roles": ["AI/ML Engineer", "Software Developer"],
-        "forecast_note": "Highest emerging experimental growth across AI startups and venture-backed Indian tech labs."
-    },
-    {
-        "skill_name": "Vector Databases",
-        "category": "Emerging & Frontier AI",
-        "growth_rate_pct": 115.8,
-        "momentum_score": 89,
-        "adoption_stage": "High Momentum",
-        "description": "High-dimensional embedding storage and approximate nearest neighbor (ANN) retrieval using Pinecone, Chroma, and Qdrant.",
-        "target_roles": ["AI/ML Engineer", "Data Scientist", "Python Developer"],
-        "forecast_note": "Standard infrastructure layer underpinning modern semantic search and RAG workflows."
-    },
-    {
-        "skill_name": "Cloud Security",
-        "category": "Cybersecurity & Architecture",
-        "growth_rate_pct": 74.0,
-        "momentum_score": 87,
-        "adoption_stage": "Mainstream Necessity",
-        "description": "Zero trust architecture, identity federation, IAM governance, and automated cloud compliance.",
-        "target_roles": ["Cybersecurity Analyst", "Cloud/DevOps Architect"],
-        "forecast_note": "High demand spurred by regulatory compliance and digital banking expansions across India."
-    },
-    {
-        "skill_name": "Rust",
-        "category": "Programming Languages",
-        "growth_rate_pct": 65.4,
-        "momentum_score": 84,
-        "adoption_stage": "Early Adoption",
-        "description": "Memory-safe systems programming for high-throughput networking, WebAssembly, and AI inference runtimes.",
-        "target_roles": ["Software Developer", "Cloud/DevOps Architect"],
-        "forecast_note": "Rapidly gaining ground in high-frequency trading, cryptography, and core infrastructure."
-    }
-]
+from services.emerging_service import emerging_service
+
+class DynamicEmergingSkillsList(list):
+    """List proxy that returns freshly computed daily emerging skills."""
+    def __iter__(self):
+        return iter(emerging_service.get_catalog_with_daily_metrics())
+
+    def __len__(self):
+        return len(emerging_service.get_catalog_with_daily_metrics())
+
+    def __getitem__(self, index):
+        return emerging_service.get_catalog_with_daily_metrics()[index]
+
+EMERGING_SKILLS_CATALOG = DynamicEmergingSkillsList()
 
 def get_dashboard_summary() -> Dict[str, Any]:
     """Provides high-level metrics for the main executive dashboard."""

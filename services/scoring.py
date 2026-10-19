@@ -18,32 +18,7 @@ from utils.constants import SKILL_TAXONOMY
 BASELINE_MARKET_SALARY_LPA = 12.27
 MAX_REFERENCE_FREQUENCY = 1250  # Top skill frequency in sample ~1,247
 
-EMERGING_FRONTIER_SKILLS = {
-    "generative ai": 98,
-    "rag": 96,
-    "llms": 95,
-    "agentic ai": 95,
-    "mlops": 92,
-    "vector databases": 90,
-    "langchain": 90,
-    "prompt engineering": 88,
-    "cloud security": 87,
-    "rust": 85,
-    "deep learning": 86,
-    "pytorch": 86,
-    "tensorflow": 84,
-    "kubernetes": 83,
-    "docker": 80,
-    "aws": 80,
-    "python": 82,
-    "big data": 81,
-    "apache spark": 82,
-    "machine learning": 85,
-    "sql": 78,
-    "sas": 76,
-    "power bi": 75,
-    "tableau": 74
-}
+from services.emerging_service import emerging_service, EMERGING_FRONTIER_SKILLS
 
 def calculate_skillpulse_score(skill_name: str) -> Dict[str, Any]:
     """

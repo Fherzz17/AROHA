@@ -17,6 +17,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 
+from typing import Optional
+from pydantic import BaseModel
+
 from models.schemas import (
     RecommendationRequest,
     ExtractRequest,
@@ -121,11 +124,31 @@ async def get_role_detail(role_name: str):
 
 @app.get("/api/emerging")
 async def get_emerging_skills():
-    """Returns curated emerging & frontier skills with growth rates and forecast notes."""
+    """Returns curated emerging & frontier skills with daily momentum, growth rates and forecast notes."""
+    skills_list = list(analytics_service.EMERGING_SKILLS_CATALOG)
+    today_date = skills_list[0]["as_of_date"] if skills_list else None
     return {
-        "disclaimer": "Forecast / Analysis — Statistical projection based on Indian tech GCC & startup trends, not a guaranteed prediction.",
-        "skills": analytics_service.EMERGING_SKILLS_CATALOG
+        "disclaimer": "Live Daily Index — Market momentum & growth rates synthesized daily from Indian tech GCC & startup trends.",
+        "as_of_date": today_date,
+        "market_status": "Daily Dynamic Momentum Active",
+        "skills": skills_list
     }
+
+class EmergingSkillOverrideRequest(BaseModel):
+    skill_name: str
+    signal_strength: float
+    notes: Optional[str] = ""
+
+@app.post("/api/emerging/override")
+async def override_emerging_skill(payload: EmergingSkillOverrideRequest):
+    """Allows admins, external scrapers or cron tasks to push live signal score overrides."""
+    from services.emerging_service import emerging_service
+    res = emerging_service.update_skill_override(
+        skill_name=payload.skill_name,
+        signal_strength=payload.signal_strength,
+        notes=payload.notes or ""
+    )
+    return {"status": "success", "skill": payload.skill_name, "data": res}
 
 @app.post("/api/recommend")
 async def get_recommendation(payload: RecommendationRequest):

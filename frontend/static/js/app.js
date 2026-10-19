@@ -482,10 +482,30 @@ async function loadEmergingSkills() {
     const res = await fetch(`${API_BASE}/api/emerging`);
     const data = await res.json();
 
+    const bannerDate = document.getElementById('emerging-sync-date');
+    if (bannerDate && data.as_of_date) {
+      bannerDate.textContent = `· Synced for ${data.as_of_date}`;
+    }
+
     const grid = document.getElementById('emerging-skills-grid');
     if (!grid) return;
 
-    grid.innerHTML = data.skills.map(item => `
+    grid.innerHTML = (data.skills || []).map(item => {
+      const trendIcon = item.trend_direction === 'up' ? '▲' : (item.trend_direction === 'down' ? '▼' : '●');
+      const trendClass = item.trend_direction || 'stable';
+      const sparklineHtml = item.history_7d && item.history_7d.length > 0 ? `
+        <div class="sparkline-7d-box" title="7-Day Trajectory: ${item.history_7d.map(h => h.day_label + ': ' + h.score).join(', ')}">
+          <span style="font-size: 0.72rem; color: #94a3b8; font-weight: 500;">7D Trajectory</span>
+          <div class="sparkline-bars">
+            ${item.history_7d.map(h => {
+              const heightPct = Math.max(20, Math.min(100, Math.round(((h.score - 50) / 50) * 100)));
+              return `<span class="sparkline-bar" style="height: ${heightPct}%;" title="${h.day_label}: ${h.score}"></span>`;
+            }).join('')}
+          </div>
+        </div>
+      ` : '';
+
+      return `
       <div class="emerging-card">
         <div>
           <div class="emerging-card-top">
@@ -493,19 +513,24 @@ async function loadEmergingSkills() {
               <h3 style="font-size: 1.15rem; font-weight: 700; color: #ffffff;">${item.skill_name}</h3>
               <span style="font-size: 0.78rem; color: #06b6d4; font-weight: 600;">${item.adoption_stage}</span>
             </div>
-            <span class="emerging-growth-pill">+${item.growth_rate_pct}% Demand Surge</span>
+            <div class="emerging-badges-group">
+              <span class="emerging-growth-pill">+${item.growth_rate_pct}% YoY</span>
+              <span class="emerging-daily-badge ${trendClass}" title="24-Hour Velocity Delta">${trendIcon} ${item.daily_delta_pct || '0.0%'} today</span>
+            </div>
           </div>
           <p class="emerging-desc">${item.description}</p>
+          ${sparklineHtml}
         </div>
         <div class="emerging-footer">
           <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-            <span>Momentum Index: <strong>${item.momentum_score}/100</strong></span>
+            <span>Daily Index: <strong>${item.momentum_score || item.signal_strength}/100</strong> <small style="color: ${item.trend_direction === 'up' ? '#34d399' : (item.trend_direction === 'down' ? '#f87171' : '#94a3b8')};">(${item.velocity_label || 'Active'})</small></span>
             <span style="color: #94a3b8;">${item.category}</span>
           </div>
           <p style="font-size: 0.75rem; color: #fde68a; font-style: italic;">Note: ${item.forecast_note}</p>
         </div>
       </div>
-    `).join('');
+      `;
+    }).join('');
   } catch (err) {
     console.error('Failed to load emerging skills:', err);
   }

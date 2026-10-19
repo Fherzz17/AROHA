@@ -39,6 +39,7 @@ def run_all_tests():
             ("SkillPulse 4-Component Scoring", test_scoring.test_skillpulse_score_components),
             ("Market & Salary Intelligence Analytics", test_scoring.test_market_intelligence_services),
             ("Evidence-Based Recommendations", test_scoring.test_enhanced_recommendations),
+            ("Daily Emerging Skills Engine", test_scoring.test_daily_emerging_skills_engine),
         ]),
         ("Database & Analytics Services", [
             ("Database Job & Skill Counts", test_analytics.test_database_counts),

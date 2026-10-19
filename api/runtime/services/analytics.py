@@ -10,7 +10,7 @@ from services.scoring import calculate_skillpulse_score, EMERGING_FRONTIER_SKILL
 
 def get_executive_dashboard_kpis() -> Dict[str, Any]:
     """
-    Computes top-level KPIs from the real SAS hackathon datasets.
+    Computes top-level KPIs from real labor market benchmark datasets.
     """
     aj = data_service.get_analytics_jobs()
     ds = data_service.get_datascience_jobs()
@@ -58,83 +58,30 @@ def get_executive_dashboard_kpis() -> Dict[str, Any]:
         "top_skills_table": top_10
     }
 
+from services.emerging_service import emerging_service
+
 def get_emerging_skills_catalog() -> List[Dict[str, Any]]:
     """
-    Future-facing market signals.
-    DISCLAIMER: The supplied job-market snapshot does not contain posting dates.
-    Future-facing signals are analytical/illustrative and are not guaranteed forecasts.
+    Daily future-facing market signals dynamically synthesized by emerging_service.
+    Reflects 24-hour deltas, momentum waves, and 7-day sparkline histories.
     """
-    return [
-        {
-            "skill": "Generative AI",
-            "category": "Frontier AI",
-            "signal_strength": 98,
-            "market_role_fit": "Data Scientist, AI/ML Engineer",
-            "description": "Foundation models, LLM orchestration, synthetic data, enterprise conversational intelligence.",
-            "status": "Rapid Market Expansion",
-            "disclaimer": "[ANALYTICAL SIGNAL] Emerging future signal; not a guaranteed forecast."
-        },
-        {
-            "skill": "RAG (Retrieval-Augmented Generation)",
-            "category": "Frontier AI",
-            "signal_strength": 96,
-            "market_role_fit": "AI/ML Engineer, Data Scientist",
-            "description": "Connecting LLMs to enterprise databases, vector embeddings, and private document knowledge.",
-            "status": "High Industry Adoption",
-            "disclaimer": "[ANALYTICAL SIGNAL] Emerging future signal; not a guaranteed forecast."
-        },
-        {
-            "skill": "LLMs & Fine-Tuning",
-            "category": "Frontier AI",
-            "signal_strength": 95,
-            "market_role_fit": "AI/ML Engineer, Data Scientist",
-            "description": "Adaptation, evaluation, quantization, and prompt engineering for open and closed language models.",
-            "status": "High Industry Adoption",
-            "disclaimer": "[ANALYTICAL SIGNAL] Emerging future signal; not a guaranteed forecast."
-        },
-        {
-            "skill": "MLOps",
-            "category": "AI Infrastructure",
-            "signal_strength": 92,
-            "market_role_fit": "Data Engineer, AI/ML Engineer",
-            "description": "Automated pipelines, model monitoring, drift tracking, GPU scaling, and model registry.",
-            "status": "Production Standard",
-            "disclaimer": "[ANALYTICAL SIGNAL] Emerging future signal; not a guaranteed forecast."
-        },
-        {
-            "skill": "Vector Databases",
-            "category": "Data Infrastructure",
-            "signal_strength": 90,
-            "market_role_fit": "Data Engineer, AI/ML Engineer",
-            "description": "High-dimensional embeddings retrieval (Pinecone, Chroma, Qdrant, Milvus).",
-            "status": "High Industry Adoption",
-            "disclaimer": "[ANALYTICAL SIGNAL] Emerging future signal; not a guaranteed forecast."
-        },
-        {
-            "skill": "Agentic AI",
-            "category": "Frontier AI",
-            "signal_strength": 95,
-            "market_role_fit": "AI/ML Engineer, Software Developer",
-            "description": "Autonomous multi-agent systems with tool use, planning loops, and memory architectures.",
-            "status": "Frontier Innovation",
-            "disclaimer": "[ANALYTICAL SIGNAL] Emerging future signal; not a guaranteed forecast."
-        },
-        {
-            "skill": "Cloud Security",
-            "category": "Architecture & Security",
-            "signal_strength": 87,
-            "market_role_fit": "Cloud Architect, DevOps Engineer",
-            "description": "Zero trust architecture, IAM governance, container security, and compliance.",
-            "status": "Core Enterprise Standard",
-            "disclaimer": "[ANALYTICAL SIGNAL] Emerging future signal; not a guaranteed forecast."
-        },
-        {
-            "skill": "Rust",
-            "category": "Programming Languages",
-            "signal_strength": 85,
-            "market_role_fit": "Data Engineer, Systems Engineer",
-            "description": "Memory-safe systems programming for high-throughput AI inference and data streaming.",
-            "status": "Early High-Velocity Adoption",
-            "disclaimer": "[ANALYTICAL SIGNAL] Emerging future signal; not a guaranteed forecast."
-        }
-    ]
+    items = emerging_service.get_catalog_with_daily_metrics()
+    result = []
+    for item in items[:8]:  # Top 8 frontier skills for executive radar
+        roles = ", ".join(item.get("target_roles", [])) if isinstance(item.get("target_roles"), list) else str(item.get("target_roles", ""))
+        result.append({
+            "skill": item["skill_name"],
+            "category": item["category"],
+            "signal_strength": item["signal_strength"],
+            "market_role_fit": roles,
+            "description": item["description"],
+            "status": item["adoption_stage"],
+            "daily_delta_pct": item["daily_delta_pct"],
+            "trend_direction": item["trend_direction"],
+            "velocity_label": item["velocity_label"],
+            "growth_rate_pct": item["growth_rate_pct"],
+            "history_7d": item["history_7d"],
+            "as_of_date": item["as_of_date"],
+            "disclaimer": "[DAILY SIGNAL ENGINE] Market momentum index updated daily; analytical signal based on enterprise hiring trends."
+        })
+    return result

@@ -50,3 +50,24 @@ def test_enhanced_recommendations():
     assert "skill" in first
     assert "priority_score" in first
     assert "why_recommended" in first
+
+def test_daily_emerging_skills_engine():
+    from datetime import date, timedelta
+    from services.emerging_service import emerging_service
+
+    today = date.today()
+    tomorrow = today + timedelta(days=1)
+
+    catalog_today = emerging_service.get_catalog_with_daily_metrics(today)
+    assert len(catalog_today) >= 8
+    genai_today = next(item for item in catalog_today if item["skill_name"] == "Generative AI")
+
+    assert "daily_delta_pct" in genai_today
+    assert "trend_direction" in genai_today
+    assert "history_7d" in genai_today
+    assert len(genai_today["history_7d"]) == 7
+    assert 50 <= genai_today["signal_strength"] <= 99
+
+    catalog_tomorrow = emerging_service.get_catalog_with_daily_metrics(tomorrow)
+    genai_tomorrow = next(item for item in catalog_tomorrow if item["skill_name"] == "Generative AI")
+    assert genai_tomorrow["as_of_date"] == tomorrow.isoformat()
