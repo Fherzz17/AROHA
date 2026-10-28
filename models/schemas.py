@@ -102,3 +102,47 @@ class ExtractResponse(BaseModel):
     matched_canonical_skills: List[str]
     top_matching_roles: List[Dict[str, Any]]
     processing_time_ms: float
+
+class JobMatchRequest(BaseModel):
+    resume_text: Optional[str] = ""
+    skills: Optional[List[str]] = None
+    target_role: Optional[str] = None
+    location: Optional[str] = None
+    min_score: Optional[float] = 30.0
+    max_experience: Optional[int] = None
+    limit: Optional[int] = 20
+
+class JobOpeningCard(BaseModel):
+    id: Optional[int] = None
+    job_title: str
+    company: str
+    industry: str
+    location: str
+    date: str
+    quarter: Optional[str] = ""
+    experience_years: int
+    experience_label: str
+    salary_lpa: float
+    salary_display: str
+    match_score: float
+    match_tier: str
+    skill_coverage_pct: float
+    matched_skills: List[str]
+    missing_skills: List[str]
+    total_required_skills: int
+    skills_match_ratio: str
+    description: str
+    links: Dict[str, str]
+
+class CandidateMatchProfile(BaseModel):
+    extracted_skills: List[str]
+    raw_count: int
+    estimated_experience_years: int
+    experience_tier: str
+    top_predicted_roles: List[Dict[str, Any]]
+
+class JobMatchResponse(BaseModel):
+    candidate_profile: CandidateMatchProfile
+    total_jobs_searched: int
+    matched_count: int
+    jobs: List[JobOpeningCard]

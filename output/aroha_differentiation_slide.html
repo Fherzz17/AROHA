@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AROHA vs. Existing Market Technologies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #070a13;
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .slide-wrapper {
+      width: 100%;
+      max-width: 1200px;
+      background: radial-gradient(circle at 15% 15%, #0f172a 0%, #070a13 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px rgba(99, 102, 241, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .slide-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #06b6d4, #10b981);
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #818cf8;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 30%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+    .subtitle {
+      color: #94a3b8;
+      font-size: 1.05rem;
+      margin-top: 6px;
+    }
+    .watermark {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #64748b;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* 3 Problem Cards */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) {
+      .problem-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card-legacy {
+      background: rgba(239, 68, 68, 0.04);
+      border: 1px solid rgba(239, 68, 68, 0.18);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-legacy .tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #f87171;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .card-legacy h3 {
+      font-size: 1.15rem;
+      color: #ffffff;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .card-legacy p {
+      color: #94a3b8;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    /* Solution Hero Banner */
+    .hero-solution {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(6, 182, 212, 0.1) 50%, rgba(16, 185, 129, 0.08) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      border-radius: 18px;
+      padding: 28px 32px;
+      display: grid;
+      grid-template-columns: 1.2fr 2fr;
+      gap: 28px;
+      align-items: center;
+      position: relative;
+    }
+    @media (max-width: 800px) {
+      .hero-solution {
+        grid-template-columns: 1fr;
+      }
+    }
+    .hero-solution-left h2 {
+      font-size: 1.6rem;
+      color: #ffffff;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .hero-solution-left p {
+      color: #38bdf8;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    .solution-points-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .solution-points-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .solution-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .solution-check {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .solution-text strong {
+      display: block;
+      color: #ffffff;
+      font-size: 0.9rem;
+      margin-bottom: 2px;
+    }
+    .solution-text span {
+      color: #94a3b8;
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    /* Print / Export Action Bar */
+    .action-bar {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+    .btn {
+      padding: 10px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #6366f1;
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: #4f46e5;
+    }
+    @media print {
+      body {
+        background: #070a13 !important;
+        padding: 0;
+      }
+      .action-bar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slide-wrapper" id="slide">
+    <div class="header-row">
+      <div>
+        <div class="badge">Market Architecture</div>
+        <h1>The Market Disconnect & The AROHA Moat</h1>
+        <p class="subtitle">Why legacy platforms only look backwards or sell courses — and how AROHA provides the missing predictive truth layer.</p>
+      </div>
+      <div class="watermark">AROHA &bull; Enterprise Intelligence</div>
+    </div>
+
+    <!-- 3 Problem Extremes -->
+    <div class="problem-grid">
+      <div class="card-legacy">
+        <span class="tag">01 / Salary Aggregators (AmbitionBox, Levels.fyi)</span>
+        <h3>The Rear-View Mirror</h3>
+        <p>Purely retrospective. Tells candidates what roles made in the past, but cannot evaluate skills or predict future compensation jumps from upskilling.</p>
+      </div>
+
+      <div class="card-legacy">
+        <span class="tag">02 / EdTech Giants (Scaler, UpGrad, Coursera)</span>
+        <h3>Incentive Conflict</h3>
+        <p>Assessments exist solely to sell ₹1L–₹3L bootcamps. Course completions and badges carry zero quantifiable monetary valuation in the job market.</p>
+      </div>
+
+      <div class="card-legacy">
+        <span class="tag">03 / Enterprise HR SaaS (Eightfold, Gloat)</span>
+        <h3>Black-Box Neural Nets</h3>
+        <p>Complex, non-explainable deep learning models that cost $100k+ with 6-month deployment cycles. Impractical for agile talent ecosystems.</p>
+      </div>
+    </div>
+
+    <!-- The AROHA Moat -->
+    <div class="hero-solution">
+      <div class="hero-solution-left">
+        <h2>The AROHA Advantage</h2>
+        <p>Empirical Skill Valuation & Career Navigation Engine</p>
+      </div>
+
+      <div class="solution-points-grid">
+        <div class="solution-item">
+          <div class="solution-check">✓</div>
+          <div class="solution-text">
+            <strong>Explainable SkillPulse™ (0–100)</strong>
+            <span>Transparent formula quantifying market demand, role versatility, and ₹ LPA baseline uplift.</span>
+          </div>
+        </div>
+
+        <div class="solution-item">
+          <div class="solution-check">✓</div>
+          <div class="solution-text">
+            <strong>Predictive Career ML</strong>
+            <span>Supervised models predicting salary-hike probability based on continuous competency upgrades (88.6% Acc).</span>
+          </div>
+        </div>
+
+        <div class="solution-item">
+          <div class="solution-check">✓</div>
+          <div class="solution-text">
+            <strong>100% Unbiased & Neutral</strong>
+            <span>Zero courses to sell. A pure objective intelligence layer that plugs into any existing talent network.</span>
+          </div>
+        </div>
+
+        <div class="solution-item">
+          <div class="solution-check">✓</div>
+          <div class="solution-text">
+            <strong>Strict Data Provenance</strong>
+            <span>Auditable UI governance ([OBSERVED] market facts separated from [MODEL OUTPUT] forecasts).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+
+</body>
+</html>

@@ -15,7 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/style.css?v=2">
 </head>
 <body>
   <div class="app-container">
@@ -60,6 +60,11 @@
         <li class="nav-item" data-view="recommend">
           <span class="nav-glyph glyph-recommend" aria-hidden="true"></span>
           <span>Recommendations</span>
+        </li>
+        <li class="nav-item" data-view="jobs">
+          <span class="nav-glyph glyph-jobs" aria-hidden="true"></span>
+          <span>Job Matcher</span>
+          <span class="badge-new-nav">AI</span>
         </li>
         <li class="nav-item" data-view="nlp">
           <span class="nav-glyph glyph-analyzer" aria-hidden="true"></span>
@@ -501,11 +506,17 @@
             <p>Competencies experiencing accelerated hiring velocity with high transformative leverage.</p>
           </div>
 
-          <div class="forecast-badge-banner">
-            <span class="inline-section-mark" aria-hidden="true"></span>
-            <div>
-              <strong>Forecast / Market Acceleration Analysis:</strong>
-              Identified through semantic shift analysis across 2024-2026 hiring specifications. Growth rate indicates YoY vacancy surge in tech hubs.
+          <div class="forecast-badge-banner" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span class="inline-section-mark" aria-hidden="true"></span>
+              <div>
+                <strong>Live Daily Emerging Radar &bull; Automated Market Signals:</strong>
+                Calibrated daily via harmonic momentum analysis. Real-time 24h deltas indicate daily hiring velocity surges across Indian GCCs & tech hubs.
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.12); padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.25);">
+              <span class="live-pulse-dot"></span>
+              <span style="font-size: 0.78rem; font-weight: 700; color: #34d399;">Daily Live Index <span id="emerging-sync-date"></span></span>
             </div>
           </div>
 
@@ -638,6 +649,183 @@
             </div>
             <div class="roadmap-timeline" id="rec-roadmap-list">
               <!-- Populated by JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= AI RESUME JOB MATCHER ================= -->
+        <section id="view-jobs" class="view-section">
+          <div class="section-header">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h2>AI Resume Job Matcher</h2>
+                <p>Upload your resume to discover active tech openings tailored to your skill profile, evaluate multi-factor match scores, and apply directly via live portal links.</p>
+              </div>
+              <div>
+                <span class="data-badge-model">[ML MATCHING MODEL]</span>
+                <span class="data-badge-observed">[LIVE PORTAL LINKS]</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upload Panel -->
+          <div class="job-matcher-panel">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+              <div style="flex: 1 1 360px;">
+                <span class="resume-upload-kicker">AI RESUME PARSER &amp; JOB MATCHING MODEL</span>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-top: 4px; margin-bottom: 6px;">Upload your resume to find matching openings.</h3>
+                <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.5; margin-bottom: 12px;">
+                  AROHA reads your resume in-memory, detects your verified skill entities, estimates your seniority, and runs our multi-factor matching model across 1,800+ benchmark tech jobs.
+                </p>
+
+                <!-- Quick Samples -->
+                <div class="sample-resumes-container">
+                  <span class="sample-label">Or try a sample profile:</span>
+                  <button type="button" class="btn-sample-resume" onclick="loadSampleResumeForMatching('data-analyst')">
+                    <span>Data Analyst</span>
+                  </button>
+                  <button type="button" class="btn-sample-resume" onclick="loadSampleResumeForMatching('data-scientist')">
+                    <span>Data Scientist</span>
+                  </button>
+                  <button type="button" class="btn-sample-resume" onclick="loadSampleResumeForMatching('aiml-engineer')">
+                    <span>AI/ML Engineer</span>
+                  </button>
+                  <button type="button" class="btn-sample-resume" onclick="loadSampleResumeForMatching('fullstack')">
+                    <span>Fullstack Dev</span>
+                  </button>
+                </div>
+              </div>
+
+              <div style="flex: 1 1 320px; max-width: 440px;">
+                <label class="resume-dropzone job-matcher-dropzone" for="jobs-resume-upload-input" id="jobs-resume-dropzone">
+                  <input id="jobs-resume-upload-input" type="file" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain">
+                  <span class="resume-upload-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <strong>Upload Resume (PDF, DOCX, TXT)</strong>
+                  <small>Drop your resume here or click to browse · up to 10 MB</small>
+                </label>
+                <div style="text-align: right; margin-top: 6px;">
+                  <button type="button" class="btn-text-link" onclick="toggleJobsPasteModal()" style="background: none; border: none; color: #38bdf8; font-size: 0.78rem; cursor: pointer; text-decoration: underline;">
+                    Paste resume text instead
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Paste Area (Collapsible) -->
+            <div id="jobs-paste-area" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+              <label style="font-size: 0.8rem; font-weight: 600; color: #ffffff; display: block; margin-bottom: 6px;">Paste Resume or Profile Text:</label>
+              <textarea id="jobs-paste-input" rows="4" placeholder="Paste resume text, skills, or LinkedIn summary here..." style="width: 100%; background: var(--bg-dark); color: #ffffff; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.86rem; font-family: inherit; resize: vertical;"></textarea>
+              <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;">
+                <button type="button" class="btn-secondary" onclick="toggleJobsPasteModal()" style="font-size: 0.8rem; padding: 6px 12px;">Cancel</button>
+                <button type="button" class="btn-primary" onclick="submitPastedResumeForMatching()" style="font-size: 0.8rem; padding: 6px 16px;">Match Jobs from Text</button>
+              </div>
+            </div>
+
+            <div class="resume-upload-status" id="jobs-upload-status" aria-live="polite"></div>
+
+            <!-- Candidate Profile Strip -->
+            <div class="candidate-profile-strip" id="jobs-candidate-strip" style="display: none;">
+              <div class="candidate-profile-top">
+                <div>
+                  <span style="font-size: 0.72rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Parsed Candidate Profile</span>
+                  <h4 style="margin: 0; font-size: 1.05rem; color: #ffffff; font-weight: 700;" id="jobs-cand-title">Ready for Matching</h4>
+                </div>
+                <div class="candidate-stats-row">
+                  <div class="candidate-stat-pill">
+                    <span>Experience:</span>
+                    <b id="jobs-cand-exp">3+ yrs</b>
+                  </div>
+                  <div class="candidate-stat-pill">
+                    <span>Seniority:</span>
+                    <b id="jobs-cand-tier">Mid-Level</b>
+                  </div>
+                  <div class="candidate-stat-pill">
+                    <span>Skills Detected:</span>
+                    <b id="jobs-cand-skill-count">8</b>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <span style="font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 6px;">Detected Technical Competencies:</span>
+                <div class="candidate-skills-chips-row" id="jobs-cand-skills-chips">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filters & Controls Strip -->
+          <div class="jobs-filter-strip">
+            <div class="jobs-filter-group">
+              <label style="font-size: 0.8rem; font-weight: 600; color: #94a3b8;">Filter Role:</label>
+              <select id="jobs-filter-role" class="jobs-select-filter" onchange="applyJobFilters()">
+                <option value="all">All Career Roles</option>
+                <option value="Data Analyst">Data Analyst</option>
+                <option value="Data Scientist">Data Scientist</option>
+                <option value="AI/ML Engineer">AI/ML Engineer</option>
+                <option value="Python Developer">Python Developer</option>
+                <option value="Software Developer">Software Developer</option>
+                <option value="Cloud/DevOps Architect">Cloud/DevOps Architect</option>
+                <option value="Fullstack Developer">Fullstack Developer</option>
+                <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+              </select>
+
+              <label style="font-size: 0.8rem; font-weight: 600; color: #94a3b8; margin-left: 6px;">Location:</label>
+              <select id="jobs-filter-location" class="jobs-select-filter" onchange="applyJobFilters()">
+                <option value="all">All Tech Hubs</option>
+                <option value="Bengaluru">Bengaluru</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Pune">Pune</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Gurugram">Gurugram / NCR</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Remote">Remote</option>
+              </select>
+            </div>
+
+            <div class="jobs-filter-group">
+              <label style="font-size: 0.8rem; font-weight: 600; color: #94a3b8;">Min Compatibility:</label>
+              <select id="jobs-filter-min-score" class="jobs-select-filter" onchange="applyJobFilters()">
+                <option value="30">All Matches (30%+)</option>
+                <option value="50" selected>Good Matches (50%+)</option>
+                <option value="70">Strong Matches (70%+)</option>
+                <option value="85">Top Matches (85%+)</option>
+              </select>
+
+              <label style="font-size: 0.8rem; font-weight: 600; color: #94a3b8; margin-left: 6px;">Sort By:</label>
+              <select id="jobs-filter-sort" class="jobs-select-filter" onchange="applyJobFilters()">
+                <option value="score">Best Match Score</option>
+                <option value="salary">Highest Salary (LPA)</option>
+                <option value="experience">Experience Fit</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Results Count Banner -->
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+            <div style="font-size: 0.95rem; font-weight: 700; color: #ffffff;" id="jobs-results-count-text">
+              Recommended Job Openings
+            </div>
+            <div style="font-size: 0.78rem; color: #94a3b8;">
+              Click <b>"Apply on LinkedIn"</b> or <b>"Naukri"</b> to view live job postings.
+            </div>
+          </div>
+
+          <!-- Job Cards Feed List -->
+          <div class="jobs-results-feed" id="jobs-feed-list">
+            <!-- Empty state default -->
+            <div class="card" style="text-align: center; padding: 48px 24px;">
+              <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              </div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-bottom: 6px;">No resume uploaded yet</h3>
+              <p style="font-size: 0.88rem; color: #94a3b8; max-width: 460px; margin: 0 auto 18px auto;">
+                Upload your resume (PDF/DOCX/TXT) or click one of the quick sample buttons above to run the matching model and retrieve live job openings.
+              </p>
+              <button type="button" class="btn-primary" onclick="loadSampleResumeForMatching('data-scientist')">
+                <span>Load Sample Data Scientist Resume</span>
+              </button>
             </div>
           </div>
         </section>
@@ -1076,7 +1264,7 @@
   </div>
 
   <!-- Custom Scripts -->
-  <script src="/static/js/charts.js"></script>
-  <script src="/static/js/app.js"></script>
+  <script src="/static/js/charts.js?v=2"></script>
+  <script src="/static/js/app.js?v=2"></script>
 </body>
 </html>

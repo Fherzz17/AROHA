@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AROHA — Twitter / X Launch Video & Feature Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070a12;
+      --card-bg: rgba(22, 32, 54, 0.7);
+      --card-border: rgba(56, 189, 248, 0.18);
+      --cyan: #38bdf8;
+      --purple: #a855f7;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.12) 0px, transparent 50%);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 1080px;
+      width: 100%;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0284c7, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+    }
+
+    .brand-text h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .twitter-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(29, 155, 240, 0.1);
+      border: 1px solid rgba(29, 155, 240, 0.3);
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      color: #1d9bf0;
+      font-weight: 600;
+    }
+
+    /* Video Player Wrapper */
+    .video-wrapper {
+      background: #000;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(56, 189, 248, 0.15);
+      position: relative;
+      margin-bottom: 28px;
+    }
+
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+      aspect-ratio: 16 / 9;
+    }
+
+    /* Scene Timeline */
+    .timeline-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      margin-bottom: 24px;
+    }
+
+    .timeline-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--cyan);
+    }
+
+    .scene-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .scene-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .scene-item:hover {
+      border-color: var(--cyan);
+      background: rgba(56, 189, 248, 0.04);
+      transform: translateY(-2px);
+    }
+
+    .scene-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--cyan);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .scene-name {
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .scene-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Twitter Copy Post Box */
+    .tweet-box {
+      background: rgba(29, 155, 240, 0.04);
+      border: 1px solid rgba(29, 155, 240, 0.25);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .tweet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .tweet-content {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-primary {
+      background: #1d9bf0;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #1a8cd8;
+    }
+
+    .btn-download {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-download:hover {
+      background: rgba(16, 185, 129, 0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="brand-block">
+        <div class="logo-badge">AR</div>
+        <div class="brand-text">
+          <h1>AROHA — Twitter / X Product Video</h1>
+          <p>42-Second Promo Video // Features & Market Differentiation</p>
+        </div>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <span class="twitter-badge">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Ready for X / Twitter
+        </span>
+        <a href="aroha_twitter_pitch.mp4" download="aroha_twitter_pitch.mp4" class="btn btn-download">
+          ⬇ Download MP4 Video
+        </a>
+      </div>
+    </header>
+
+    <!-- Video Embed -->
+    <div class="video-wrapper">
+      <video controls autoplay loop muted playsinline poster="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1280' height='720' viewBox='0 0 1280 720'><rect width='1280' height='720' fill='%23090d18'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%2338bdf8' font-size='32' font-family='sans-serif'>AROHA Video Ready</text></svg>">
+        <source src="aroha_twitter_pitch.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <!-- Timeline Breakdown -->
+    <div class="timeline-card">
+      <div class="timeline-title">
+        🎬 42-Second Storyboard & Feature Architecture
+      </div>
+      <div class="scene-grid">
+        <div class="scene-item">
+          <div class="scene-time">0:00 – 0:07 // SCENE 1</div>
+          <div class="scene-name">The Broken Status Quo</div>
+          <div class="scene-desc">AmbitionBox shows 3-year-old salary history; Scaler & EdTech platforms grade users only to sell ₹2 Lakh bootcamps.</div>
+        </div>
+
+        <div class="scene-item">
+          <div class="scene-time">0:07 – 0:14 // SCENE 2</div>
+          <div class="scene-name">Meet AROHA & SkillPulse™</div>
+          <div class="scene-desc">The objective valuation layer for technical skills. 17,400+ job records benchmarked, 88.6% ML accuracy, 0–100 score.</div>
+        </div>
+
+        <div class="scene-item">
+          <div class="scene-time">0:14 – 0:21 // SCENE 3</div>
+          <div class="scene-name">What-If Simulator & ML Model</div>
+          <div class="scene-desc">Simulate adding PyTorch/Docker (+₹6.3L upside); ML proves Math/Statistics (+1.398 weight) drives 3.2x higher salary boost.</div>
+        </div>
+
+        <div class="scene-item">
+          <div class="scene-time">0:21 – 0:28 // SCENE 4</div>
+          <div class="scene-name">Skill Gap Radar & GCC Audits</div>
+          <div class="scene-desc">Top 3 skills ranked by direct salary ROI without course ads. Enterprise heatmaps for GCCs auditing GenAI reskilling.</div>
+        </div>
+
+        <div class="scene-item">
+          <div class="scene-time">0:28 – 0:35 // SCENE 5</div>
+          <div class="scene-name">The Unfair Advantage (Moat)</div>
+          <div class="scene-desc">Head-to-head comparison table: Real-time vs backward; 100% neutral vs course upsells; 100% explainable math vs black boxes.</div>
+        </div>
+
+        <div class="scene-item">
+          <div class="scene-time">0:35 – 0:42 // SCENE 6</div>
+          <div class="scene-name">The Call to Action & Vision</div>
+          <div class="scene-desc">"Don't just prepare for today's jobs. Build for tomorrow's skills." Built for 5.4M Indian tech engineers and enterprise GCCs.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ready-to-Post Twitter Copy -->
+    <div class="tweet-box">
+      <div class="tweet-header">
+        <h3 style="color: #1d9bf0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Ready-to-Post Twitter / X Launch Thread
+        </h3>
+        <button class="btn btn-primary" onclick="copyTweet()">📋 Copy Tweet Text</button>
+      </div>
+      <div class="tweet-content" id="tweet-text">Why are tech salaries and skill valuations still broken in 2025?
+
+If you check AmbitionBox or Glassdoor: you see 3-year-old averages.
+If you take an assessment on Scaler or Coursera: they just want to sell you a ₹2 Lakh course.
+
+We built AROHA — the objective valuation & intelligence layer for technical skills.
+
+Here is what makes it different:
+
+1️⃣ SkillPulse™ (0–100): An explainable mathematical score calculated across 17,400+ active Indian tech job postings.
+
+2️⃣ "What-If" Salary Simulator: Toggle skills (like PyTorch or Docker) to see your real-time compensation curve shift across 5 experience tiers.
+
+3️⃣ Supervised ML Trajectory: 88.6% accuracy predicting salary hikes. Our models prove Math & Statistics gives a 3.2x higher salary boost than pure syntax.
+
+4️⃣ Enterprise GCC Audits: Helping teams audit org-wide AI readiness and measure real L&D reskilling ROI.
+
+No course-selling. No black-box algorithms. Just mathematical truth.
+
+Watch the 42s demo below 👇
+Benchmark your profile: aroha.ai
+
+#BuildInPublic #AI #TechCareers #MachineLearning #Startups</div>
+    </div>
+
+  </div>
+
+  <script>
+    function copyTweet() {
+      const text = document.getElementById('tweet-text').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Tweet text copied to clipboard! You can now paste it directly into Twitter/X.');
+      });
+    }
+  </script>
+</body>
+</html>

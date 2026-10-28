@@ -5,6 +5,17 @@
 
 const API_BASE = window.location.origin;
 
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+window.escapeHtml = escapeHtml;
+
 const DEFAULT_ROLES = [
   "Data Scientist",
   "Data Analyst",
@@ -30,12 +41,12 @@ const ROLE_WORKSPACES = {
     label: 'Student workspace',
     note: 'Student workspace · Profile fit & learning roadmaps',
     defaultView: 'recommend',
-    views: ['home', 'dashboard', 'skills', 'career', 'emerging', 'recommend', 'nlp', 'about'],
-    navLabels: { dashboard: 'Market Dashboard', skills: 'Skill Search', career: 'Career Explorer', emerging: 'Emerging Skills', recommend: 'My Roadmap', nlp: 'Job Analyzer', about: 'Methodology' },
+    views: ['home', 'dashboard', 'skills', 'career', 'emerging', 'recommend', 'jobs', 'nlp', 'about'],
+    navLabels: { dashboard: 'Market Dashboard', skills: 'Skill Search', career: 'Career Explorer', emerging: 'Emerging Skills', recommend: 'My Roadmap', jobs: 'Job Matcher', nlp: 'Job Analyzer', about: 'Methodology' },
     hero: { title: 'Make your next<br>move <em>count.</em>', intro: 'Upload your resume, choose a target role, and get a focused view of the skills that will make the biggest difference.', primary: 'Analyse my profile', primaryView: 'recommend', secondary: 'Explore the market', secondaryView: 'dashboard' },
     cards: [
       ['01 / EXPLORE', 'Understand the<br>market.', 'See demand, salary context and role coverage across the skills employers use today.', 'Open dashboard', 'dashboard'],
-      ['02 / ASSESS', 'See your<br>starting point.', 'Bring in your resume or add skills yourself. AROHA turns them into a usable profile.', 'Import resume', 'recommend'],
+      ['02 / MATCH', 'Find Matching<br>Openings.', 'Upload your resume to discover compatible tech jobs with direct apply links.', 'Find Jobs', 'jobs'],
       ['03 / ACT', 'Learn with<br>purpose.', 'Identify the gaps that matter for your target role and build a focused learning roadmap.', 'Create roadmap', 'recommend']
     ]
   },
@@ -43,8 +54,8 @@ const ROLE_WORKSPACES = {
     label: 'Recruiter workspace',
     note: 'Recruiter workspace · Talent demand & role benchmarks',
     defaultView: 'dashboard',
-    views: ['home', 'dashboard', 'skills', 'career', 'emerging', 'nlp', 'about'],
-    navLabels: { dashboard: 'Talent Market', skills: 'Skill Demand', career: 'Role Benchmarks', emerging: 'Demand Radar', nlp: 'JD Analyzer', about: 'Methodology' },
+    views: ['home', 'dashboard', 'skills', 'career', 'emerging', 'jobs', 'nlp', 'about'],
+    navLabels: { dashboard: 'Talent Market', skills: 'Skill Demand', career: 'Role Benchmarks', emerging: 'Demand Radar', jobs: 'Job Matcher', nlp: 'JD Analyzer', about: 'Methodology' },
     hero: { title: 'Find the talent<br>signals that <em>matter.</em>', intro: 'Compare demand, role coverage, and market momentum to make sharper hiring decisions.', primary: 'Explore talent demand', primaryView: 'dashboard', secondary: 'Compare role benchmarks', secondaryView: 'career' },
     cards: [
       ['01 / SCAN', 'Read the<br>talent market.', 'Track the skills, locations, and hiring signals moving across the Indian technology market.', 'Open talent market', 'dashboard'],
@@ -56,8 +67,8 @@ const ROLE_WORKSPACES = {
     label: 'Educator workspace',
     note: 'Educator workspace · Curriculum alignment & future skills',
     defaultView: 'emerging',
-    views: ['home', 'dashboard', 'skills', 'career', 'emerging', 'about'],
-    navLabels: { dashboard: 'Workforce Signals', skills: 'Skill Trends', career: 'Curriculum Alignment', emerging: 'Future Skills', about: 'Data & Methodology' },
+    views: ['home', 'dashboard', 'skills', 'career', 'emerging', 'jobs', 'about'],
+    navLabels: { dashboard: 'Workforce Signals', skills: 'Skill Trends', career: 'Curriculum Alignment', emerging: 'Future Skills', jobs: 'Job Matcher', about: 'Data & Methodology' },
     hero: { title: 'Shape learning for<br>what comes <em>next.</em>', intro: 'Connect curriculum choices with real market demand, changing role needs, and future-ready skill signals.', primary: 'Review curriculum signals', primaryView: 'career', secondary: 'Track future skills', secondaryView: 'emerging' },
     cards: [
       ['01 / OBSERVE', 'See the<br>skills shifting.', 'Follow market signals and fast-growing capabilities across technology domains.', 'Open workforce signals', 'dashboard'],
@@ -69,8 +80,8 @@ const ROLE_WORKSPACES = {
 
 const GUEST_WORKSPACE = {
   note: 'Guest workspace · Explore AROHA',
-  views: ['home', 'dashboard', 'skills', 'career', 'emerging', 'recommend', 'nlp', 'about'],
-  navLabels: { dashboard: 'Dashboard', skills: 'Skill Search', career: 'Career Explorer', emerging: 'Emerging Skills', recommend: 'Recommendations', nlp: 'NLP Job Analyzer', about: 'About & Methodology' },
+  views: ['home', 'dashboard', 'skills', 'career', 'emerging', 'recommend', 'jobs', 'nlp', 'about'],
+  navLabels: { dashboard: 'Dashboard', skills: 'Skill Search', career: 'Career Explorer', emerging: 'Emerging Skills', recommend: 'Recommendations', jobs: 'Job Matcher', nlp: 'NLP Job Analyzer', about: 'About & Methodology' },
   hero: { title: 'Make your next<br>move <em>count.</em>', intro: 'Upload your resume, choose a target role, and get a clear, evidence-based view of the skills that will make the biggest difference.', primary: 'Analyse my profile', primaryView: 'recommend', secondary: 'Explore the market', secondaryView: 'dashboard' },
   cards: ROLE_WORKSPACES.student.cards
 };
@@ -138,6 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupNLPPlayground();
   setupRecommendationControls();
   setupResumeUpload();
+  setupJobMatcher();
   
   // Initialize Authentication System
   await initAuthSystem();
@@ -631,9 +643,13 @@ async function extractResumeSkills(file) {
     renderSelectedUserSkillsChips();
     const count = data.extracted_skills.length;
     setResumeStatus(
-      count ? `${count} skills found and added to your profile. Your gap analysis has been refreshed.` : 'Your resume was read, but no indexed skills were found. Add skills manually below.',
+      count ? `${count} skills found and added to your profile. <a href="javascript:void(0)" onclick="switchView('jobs')" style="color: #34d399; font-weight: 700; margin-left: 8px; text-decoration: underline;">View Matching Job Openings ↗</a>` : 'Your resume was read, but no indexed skills were found. Add skills manually below.',
       count ? 'success' : 'warning'
     );
+    // Also prepare Job Matcher with these extracted skills
+    if (count && (!currentJobMatchResult || currentJobMatchResult.matched_count === 0)) {
+      matchJobsWithText(data.extracted_skills.join(', '));
+    }
     if (Array.isArray(data.top_matching_roles) && data.top_matching_roles.length > 0) {
       const suggContainer = document.getElementById('rec-role-suggestions');
       if (suggContainer) {
@@ -1658,6 +1674,389 @@ function handleWelcomeBannerAction() {
   } else {
     switchView('emerging');
   }
+}
+
+// ========================================================================= //
+// AI Resume Job Matcher
+// ========================================================================= //
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+const SAMPLE_RESUMES = {
+  'data-analyst': `Priya Sharma\nData Analyst\nEmail: priya.sharma@example.com | Bengaluru, India\nExperience: 3 years of hands-on experience in business intelligence, data reporting and analytics.\n\nTechnical Skills:\n- SQL, Python, Tableau, Power BI, Excel, Pandas, Statistics, Data Analysis.\n\nWork Experience:\nData Analyst at Retail Analytics Solutions (2022 - Present):\n- Designed production KPI dashboards in Tableau and Power BI consumed by 50+ executive stakeholders.\n- Authored advanced SQL queries and stored procedures to aggregate multi-million row transactional databases.\n- Automated monthly cohort retention reports using Python and Pandas.`,
+  
+  'data-scientist': `Aarav Mehta\nSenior Data Scientist\nEmail: aarav.mehta@example.com | Pune, India\nExperience: 5+ years building predictive machine learning models and deploying production analytics systems.\n\nTechnical Skills:\n- Python, SQL, Machine Learning, Scikit-learn, Deep Learning, Pandas, NumPy, TensorFlow, AWS, Statistics.\n\nWork Experience:\nSenior Data Scientist at Enterprise AI Labs (2020 - Present):\n- Designed customer churn prediction engine achieving 89% ROC-AUC using Random Forest and XGBoost.\n- Implemented deep learning classification models in TensorFlow for customer sentiment analysis.\n- Managed automated model retraining and inference pipelines on AWS cloud infrastructure.`,
+
+  'aiml-engineer': `Rohan Verma\nAI/ML Engineer\nEmail: rohan.verma@example.com | Hyderabad, India\nExperience: 4 years designing deep learning architectures, transformer pipelines and MLOps workflows.\n\nTechnical Skills:\n- Python, PyTorch, TensorFlow, Machine Learning, Deep Learning, Docker, Kubernetes, AWS, Git, MLOps.\n\nWork Experience:\nMachine Learning Engineer at CloudScale Tech (2021 - Present):\n- Deployed real-time inference microservices containerized with Docker and orchestrated on Kubernetes.\n- Engineered end-to-end MLOps pipeline for distributed model training and versioning on AWS.`,
+
+  'fullstack': `Ananya Iyer\nFullstack Software Developer\nEmail: ananya.iyer@example.com | Mumbai, India\nExperience: 4 years architecting modern responsive web applications and scalable REST backend services.\n\nTechnical Skills:\n- JavaScript, React, Node.js, Python, MongoDB, REST APIs, Git, Docker, SQL, TypeScript.\n\nWork Experience:\nFullstack Developer at FinTech Innovations (2021 - Present):\n- Built interactive web portals using React and modern CSS design systems for 200,000+ active users.\n- Engineered microservices architecture using Node.js, Express, and MongoDB with 99.9% uptime.`
+};
+
+let currentJobMatchResult = null;
+
+function setupJobMatcher() {
+  const input = document.getElementById('jobs-resume-upload-input');
+  const dropzone = document.getElementById('jobs-resume-dropzone');
+  if (!input || !dropzone) return;
+
+  input.addEventListener('change', () => {
+    const [file] = input.files;
+    if (file) handleJobsResumeUpload(file);
+  });
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropzone.addEventListener(eventName, event => {
+      event.preventDefault();
+      dropzone.classList.add('is-dragging');
+    });
+  });
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropzone.addEventListener(eventName, event => {
+      event.preventDefault();
+      dropzone.classList.remove('is-dragging');
+    });
+  });
+  dropzone.addEventListener('drop', event => {
+    const [file] = event.dataTransfer.files;
+    if (file) handleJobsResumeUpload(file);
+  });
+
+  // Pre-load location options from API
+  loadJobLocationsFilter();
+}
+
+async function loadJobLocationsFilter() {
+  try {
+    const res = await fetch(`${API_BASE}/api/jobs/locations`);
+    if (!res.ok) return;
+    const data = await res.json();
+    const locSelect = document.getElementById('jobs-filter-location');
+    if (locSelect && Array.isArray(data.locations)) {
+      const currentVal = locSelect.value;
+      locSelect.innerHTML = '<option value="all">All Tech Hubs</option>';
+      data.locations.forEach(loc => {
+        const opt = document.createElement('option');
+        opt.value = loc;
+        opt.innerText = loc;
+        locSelect.appendChild(opt);
+      });
+      if (currentVal) locSelect.value = currentVal;
+    }
+  } catch (err) {
+    console.warn('Failed to load job locations:', err);
+  }
+}
+
+function setJobsStatus(message, type) {
+  const statusEl = document.getElementById('jobs-upload-status');
+  if (!statusEl) return;
+  if (!message) {
+    statusEl.innerText = '';
+    statusEl.className = 'resume-upload-status';
+    statusEl.style.display = 'none';
+    return;
+  }
+  statusEl.style.display = 'block';
+  statusEl.className = `resume-upload-status is-${type}`;
+  statusEl.innerText = message;
+}
+
+function toggleJobsPasteModal() {
+  const area = document.getElementById('jobs-paste-area');
+  if (!area) return;
+  area.style.display = area.style.display === 'none' ? 'block' : 'none';
+  if (area.style.display === 'block') {
+    document.getElementById('jobs-paste-input')?.focus();
+  }
+}
+
+async function submitPastedResumeForMatching() {
+  const textInput = document.getElementById('jobs-paste-input');
+  const text = textInput ? textInput.value.trim() : '';
+  if (!text || text.length < 15) {
+    setJobsStatus('Please paste at least 15 characters of resume or profile text.', 'error');
+    return;
+  }
+  toggleJobsPasteModal();
+  await matchJobsWithText(text, 'Pasted Profile');
+}
+
+async function loadSampleResumeForMatching(sampleKey) {
+  const text = SAMPLE_RESUMES[sampleKey];
+  if (!text) return;
+  switchView('jobs');
+  const roleNameMap = {
+    'data-analyst': 'Data Analyst',
+    'data-scientist': 'Data Scientist',
+    'aiml-engineer': 'AI/ML Engineer',
+    'fullstack': 'Fullstack Developer'
+  };
+  await matchJobsWithText(text, roleNameMap[sampleKey] || 'Sample Profile');
+}
+
+async function handleJobsResumeUpload(file) {
+  const dropzone = document.getElementById('jobs-resume-dropzone');
+  const allowed = ['application/pdf', 'text/plain', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  const extension = file.name.split('.').pop().toLowerCase();
+
+  if (!allowed.includes(file.type) && !['pdf', 'docx', 'doc', 'txt'].includes(extension)) {
+    setJobsStatus('Please upload a PDF, DOCX, or TXT resume file.', 'error');
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    setJobsStatus('Resume file size exceeds 10 MB limit.', 'error');
+    return;
+  }
+
+  dropzone?.classList.add('is-processing');
+  setJobsStatus(`Analyzing ${file.name} with AI Matching Model…`, 'loading');
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const res = await fetch(`${API_BASE}/api/jobs/match-resume`, {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Resume matching failed.');
+
+    currentJobMatchResult = data;
+    displayCandidateProfileStrip(data.candidate_profile);
+    setJobsStatus(`Extracted ${data.candidate_profile.raw_count} skills. Evaluated ${data.total_jobs_searched.toLocaleString()} jobs.`, 'success');
+    applyJobFilters();
+  } catch (err) {
+    console.error('Job match upload error:', err);
+    setJobsStatus(err.message || 'Failed to match resume against openings. Please try again.', 'error');
+  } finally {
+    dropzone?.classList.remove('is-processing');
+  }
+}
+
+async function matchJobsWithText(resumeText, profileTitle = 'Resume Profile') {
+  setJobsStatus(`Running AI Model matching across job index…`, 'loading');
+  try {
+    const res = await fetch(`${API_BASE}/api/jobs/match`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        resume_text: resumeText,
+        min_score: 25.0,
+        limit: 50
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Job matching failed.');
+
+    currentJobMatchResult = data;
+    displayCandidateProfileStrip(data.candidate_profile, profileTitle);
+    setJobsStatus(`Match completed: ${data.matched_count} matching openings found across ${data.total_jobs_searched.toLocaleString()} indexed jobs.`, 'success');
+    applyJobFilters();
+  } catch (err) {
+    console.error('Match text error:', err);
+    setJobsStatus(err.message || 'Failed to search relevant openings.', 'error');
+  }
+}
+
+function displayCandidateProfileStrip(profile, titleOverride) {
+  const strip = document.getElementById('jobs-candidate-strip');
+  if (!strip || !profile) return;
+
+  strip.style.display = 'flex';
+  const titleEl = document.getElementById('jobs-cand-title');
+  const expEl = document.getElementById('jobs-cand-exp');
+  const tierEl = document.getElementById('jobs-cand-tier');
+  const countEl = document.getElementById('jobs-cand-skill-count');
+  const chipsContainer = document.getElementById('jobs-cand-skills-chips');
+
+  const topRoleName = profile.top_predicted_roles && profile.top_predicted_roles.length > 0
+    ? profile.top_predicted_roles[0].role
+    : 'Tech Professional';
+
+  if (titleEl) titleEl.innerText = titleOverride || `${topRoleName} Profile`;
+  if (expEl) expEl.innerText = `${profile.estimated_experience_years}+ yrs`;
+  if (tierEl) tierEl.innerText = profile.experience_tier || 'Mid-Level';
+  if (countEl) countEl.innerText = profile.raw_count || (profile.extracted_skills ? profile.extracted_skills.length : 0);
+
+  if (chipsContainer && Array.isArray(profile.extracted_skills)) {
+    chipsContainer.innerHTML = profile.extracted_skills.map(s => `
+      <span class="cand-skill-chip">${escapeHtml(s)}</span>
+    `).join('');
+  }
+}
+
+function applyJobFilters() {
+  if (!currentJobMatchResult || !Array.isArray(currentJobMatchResult.jobs)) {
+    return;
+  }
+
+  const roleFilter = (document.getElementById('jobs-filter-role')?.value || 'all').toLowerCase();
+  const locFilter = (document.getElementById('jobs-filter-location')?.value || 'all').toLowerCase();
+  const minScore = parseFloat(document.getElementById('jobs-filter-min-score')?.value || '0');
+  const sortBy = document.getElementById('jobs-filter-sort')?.value || 'score';
+
+  let filtered = currentJobMatchResult.jobs.filter(job => {
+    // Role filter
+    if (roleFilter !== 'all' && !job.job_title.toLowerCase().includes(roleFilter)) {
+      return false;
+    }
+    // Location filter
+    if (locFilter !== 'all' && !job.location.toLowerCase().includes(locFilter)) {
+      return false;
+    }
+    // Min Score
+    if (job.match_score < minScore) {
+      return false;
+    }
+    return true;
+  });
+
+  // Sort
+  if (sortBy === 'score') {
+    filtered.sort((a, b) => b.match_score - a.match_score);
+  } else if (sortBy === 'salary') {
+    filtered.sort((a, b) => (b.salary_lpa || 0) - (a.salary_lpa || 0));
+  } else if (sortBy === 'experience') {
+    filtered.sort((a, b) => a.experience_years - b.experience_years);
+  }
+
+  renderMatchedJobCards(filtered);
+}
+
+function renderMatchedJobCards(jobs) {
+  const container = document.getElementById('jobs-feed-list');
+  const countText = document.getElementById('jobs-results-count-text');
+  if (!container) return;
+
+  if (countText) {
+    countText.innerHTML = `Showing <b>${jobs.length}</b> Relevant Openings Matching Your Resume`;
+  }
+
+  if (!jobs || jobs.length === 0) {
+    container.innerHTML = `
+      <div class="card" style="text-align: center; padding: 40px 20px;">
+        <h4 style="color: #ffffff; margin-bottom: 6px;">No openings match your current filter criteria</h4>
+        <p style="color: #94a3b8; font-size: 0.85rem; max-width: 420px; margin: 0 auto 16px auto;">
+          Try lowering the minimum compatibility score or switching the role/location dropdowns to "All".
+        </p>
+        <button type="button" class="btn-secondary" onclick="resetJobFilters()">Reset Filters</button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = jobs.map(j => {
+    const tierClass = j.match_score >= 85 ? 'is-top-match' : (j.match_score >= 70 ? 'is-strong-match' : 'is-good-match');
+    const pillClass = j.match_score >= 85 ? 'top' : (j.match_score >= 70 ? 'strong' : 'good');
+
+    const matchedHtml = (j.matched_skills || []).map(s => `
+      <span class="job-chip-matched">${escapeHtml(s)}</span>
+    `).join('');
+
+    const missingHtml = (j.missing_skills || []).slice(0, 4).map(s => `
+      <span class="job-chip-missing">+ ${escapeHtml(s)}</span>
+    `).join('');
+
+    return `
+      <article class="job-opening-card ${tierClass}">
+        <div class="job-card-header">
+          <div class="job-card-title-group">
+            <h3>${escapeHtml(j.job_title)}</h3>
+            <div class="job-card-company">
+              <span>${escapeHtml(j.company)}</span>
+              <span style="color: var(--text-dim);">&bull;</span>
+              <span style="color: #94a3b8; font-size: 0.8rem;">${escapeHtml(j.industry || 'Technology')}</span>
+            </div>
+          </div>
+          <div class="job-match-badge">
+            <span class="match-score-pill ${pillClass}">
+              ${j.match_score}% Match
+            </span>
+            <span class="match-tier-label">${escapeHtml(j.match_tier)}</span>
+          </div>
+        </div>
+
+        <div class="job-meta-row">
+          <span class="job-meta-tag"><span class="meta-label">Location:</span> ${escapeHtml(j.location)}</span>
+          <span class="job-meta-tag"><span class="meta-label">Experience:</span> ${escapeHtml(j.experience_label || j.experience_years + '+ yrs')}</span>
+          <span class="job-meta-tag salary"><span class="meta-label">Salary:</span> ${escapeHtml(j.salary_display || '₹' + j.salary_lpa + ' LPA')}</span>
+          <span class="job-meta-tag"><span class="meta-label">Fit:</span> ${escapeHtml(j.skills_match_ratio || '')}</span>
+        </div>
+
+        <div class="job-skills-row">
+          <div class="job-skills-label">Skill Compatibility Breakdown:</div>
+          <div class="job-skills-chips">
+            ${matchedHtml}
+            ${missingHtml}
+          </div>
+        </div>
+
+        ${j.description ? `
+          <div class="job-description-text">
+            ${escapeHtml(j.description)}
+          </div>
+        ` : ''}
+
+        <div class="job-actions-row">
+          <div class="job-portal-links">
+            <a href="${j.links.apply_url}" target="_blank" rel="noopener noreferrer" class="btn-apply-primary" title="Search and apply on LinkedIn">
+              <span>Apply on LinkedIn</span> ↗
+            </a>
+            <a href="${j.links.naukri_url}" target="_blank" rel="noopener noreferrer" class="btn-apply-secondary" title="Search on Naukri.com">
+              <span>Naukri</span> ↗
+            </a>
+            <a href="${j.links.google_jobs_url}" target="_blank" rel="noopener noreferrer" class="btn-apply-secondary" title="Search on Google Jobs">
+              <span>Google Jobs</span> ↗
+            </a>
+          </div>
+
+          <div>
+            <button type="button" class="btn-gap-jump" onclick="jumpToSkillGapFromJob('${escapeHtml(j.job_title)}')">
+              <span>View Skill Gap Roadmap</span> →
+            </button>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+function resetJobFilters() {
+  const roleSelect = document.getElementById('jobs-filter-role');
+  const locSelect = document.getElementById('jobs-filter-location');
+  const scoreSelect = document.getElementById('jobs-filter-min-score');
+  const sortSelect = document.getElementById('jobs-filter-sort');
+
+  if (roleSelect) roleSelect.value = 'all';
+  if (locSelect) locSelect.value = 'all';
+  if (scoreSelect) scoreSelect.value = '30';
+  if (sortSelect) sortSelect.value = 'score';
+
+  applyJobFilters();
+}
+
+function jumpToSkillGapFromJob(roleTitle) {
+  const recSelect = document.getElementById('rec-target-role');
+  if (recSelect) {
+    // Check if role is in options
+    for (let i = 0; i < recSelect.options.length; i++) {
+      if (recSelect.options[i].value.toLowerCase() === roleTitle.toLowerCase()) {
+        recSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+  switchView('recommend');
+  runRecommendationAnalysis();
 }
 
 

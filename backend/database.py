@@ -224,3 +224,59 @@ def get_industry_distribution() -> List[Dict[str, Any]]:
             }
             for r in cursor.fetchall()
         ]
+
+def get_all_jobs_with_skills(limit: Optional[int] = None) -> List[Dict[str, Any]]:
+    """Fetches all jobs aggregated with their associated skills list."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        query = """
+            SELECT j.id, j.job_title, j.company, j.industry, j.location, j.date,
+                   j.quarter, j.experience_years, j.salary_lpa, j.description,
+                   GROUP_CONCAT(js.skill, '|||') as skills_str
+            FROM jobs j
+            LEFT JOIN job_skills js ON j.id = js.job_id
+            GROUP BY j.id
+            ORDER BY j.date DESC
+        """
+        if limit:
+            query += f" LIMIT {int(limit)}"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        jobs = []
+        for r in rows:
+            skills = [s.strip() for s in r["skills_str"].split("|||") if s.strip()] if r["skills_str"] else []
+            jobs.append({
+                "id": r["id"],
+                "job_title": r["job_title"],
+                "company": r["company"],
+                "industry": r["industry"],
+                "location": r["location"],
+                "date": r["date"],
+                "quarter": r["quarter"],
+                "experience_years": r["experience_years"],
+                "salary_lpa": r["salary_lpa"],
+                "description": r["description"],
+                "skills": skills
+            })
+        return jobs
+
+def get_unique_locations() -> List[str]:
+    """Returns sorted unique location names from indexed jobs."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT DISTINCT location FROM jobs WHERE location IS NOT NULL AND location != '' ORDER BY location ASC")
+        return [r["location"] for r in cursor.fetchall()]
+
+def get_job_by_id(job_id: int) -> Optional[Dict[str, Any]]:
+    """Returns details and skills for a single job by id."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM jobs WHERE id = ?", (job_id,))
+        row = cursor.fetchone()
+        if not row:
+            return None
+        cursor.execute("SELECT skill FROM job_skills WHERE job_id = ?", (job_id,))
+        skills = [r["skill"] for r in cursor.fetchall()]
+        data = dict(row)
+        data["skills"] = skills
+        return data

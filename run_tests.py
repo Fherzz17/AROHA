@@ -19,6 +19,7 @@ from tests import test_api
 from tests import test_sas_models
 from tests import test_scoring
 from tests import test_auth
+from tests import test_job_matching
 
 def run_all_tests():
     modules = [
@@ -67,6 +68,15 @@ def run_all_tests():
             ("Duplicate Email Prevention", test_auth.test_auth_duplicate_email_prevention),
             ("Session Verification & Logout", test_auth.test_auth_session_me_and_logout),
             ("Social SSO OAuth Simulation", test_auth.test_auth_social_login),
+        ]),
+        ("AI Resume Job Matcher & Openings", [
+            ("Experience Estimation & Seniority", test_job_matching.test_experience_estimation),
+            ("Job Application & Search Links Generation", test_job_matching.test_job_links_generation),
+            ("Resume Multi-Factor Scoring & Ranking", test_job_matching.test_resume_matching_scoring_and_ranking),
+            ("Role & Location Filtering", test_job_matching.test_role_and_location_filters),
+            ("API JSON Job Match Endpoint", test_job_matching.test_api_jobs_match_json_endpoint),
+            ("API Resume Upload Job Match Endpoint", test_job_matching.test_api_jobs_match_resume_upload_endpoint),
+            ("API Locations & Single Job Details", test_job_matching.test_api_jobs_locations_and_single_job),
         ])
     ]
 

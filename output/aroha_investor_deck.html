@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AROHA — Investor Pitch Deck (8 Slides)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #060913;
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+    .deck-container {
+      width: 100%;
+      max-width: 1140px;
+      min-height: 640px;
+      background: radial-gradient(circle at 12% 18%, #0f172a 0%, #070a13 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 44px 52px;
+      box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.8), 0 0 35px rgba(99, 102, 241, 0.15);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .deck-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #06b6d4, #10b981);
+      border-radius: 20px 20px 0 0;
+    }
+
+    /* Header & Navigation Bar */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .brand-kicker {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(99, 102, 241, 0.5);
+    }
+    .brand-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+    }
+    .brand-tag {
+      font-size: 0.72rem;
+      color: #38bdf8;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(56, 189, 248, 0.1);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+    .slide-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Slides Container */
+    .slide {
+      display: none;
+      animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      flex: 1;
+    }
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-title-block {
+      margin-bottom: 24px;
+    }
+    .slide-category {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #818cf8;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 6px;
+    }
+    .slide-heading {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+    .slide-heading span {
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .slide-subheading {
+      font-size: 1rem;
+      color: #94a3b8;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* Grids & Cards */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 22px;
+      backdrop-filter: blur(8px);
+    }
+    .card-problem {
+      background: rgba(239, 68, 68, 0.04);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    .card-solution {
+      background: rgba(16, 185, 129, 0.04);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .card h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .card p {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    .metric-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.1;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+    .metric-value span {
+      color: #38bdf8;
+    }
+    .metric-label {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    /* Comparison Table */
+    table.compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      margin-top: 8px;
+    }
+    table.compare-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    table.compare-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #94a3b8;
+    }
+    table.compare-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .highlight-cell {
+      background: rgba(99, 102, 241, 0.12) !important;
+      color: #ffffff !important;
+      font-weight: 600;
+      border-left: 2px solid #6366f1;
+    }
+
+    /* Speaker Notes Accordion */
+    .speaker-note-box {
+      margin-top: 24px;
+      background: rgba(2, 6, 23, 0.6);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .speaker-note-box strong {
+      color: #fbbf24;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* Bottom Control Bar */
+    .controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .nav-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      padding: 10px 18px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: #ffffff;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: #6366f1;
+      border-color: #6366f1;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: #4f46e5;
+    }
+    .btn-pdf {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.35);
+      color: #34d399;
+    }
+    .btn-pdf:hover {
+      background: rgba(16, 185, 129, 0.25);
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: #060913 !important;
+        padding: 0;
+      }
+      .controls-bar, .deck-container::before {
+        display: none !important;
+      }
+      .slide {
+        display: block !important;
+        page-break-after: always;
+        min-height: 100vh;
+        padding: 40px;
+      }
+      .deck-container {
+        box-shadow: none;
+        border: none;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-container">
+    
+    <!-- Top Header -->
+    <div class="slide-header">
+      <div class="brand-kicker">
+        <div class="brand-logo">AR</div>
+        <div>
+          <span class="brand-title">AROHA</span>
+          <span class="brand-tag">Investor Deck</span>
+        </div>
+      </div>
+      <div class="slide-counter" id="slide-indicator">Slide 1 of 8</div>
+    </div>
+
+    <!-- ================= SLIDE 1 ================= -->
+    <div class="slide active" id="slide-1">
+      <div class="slide-title-block">
+        <div class="slide-category">01 / Title & Vision</div>
+        <h2 class="slide-heading">The <span>Intelligence & Valuation Layer</span> for Technical Skills</h2>
+        <p class="slide-subheading">Translating noisy labor market records into explainable mathematical skill values, compensation curves, and predictive career trajectories.</p>
+      </div>
+
+      <div class="grid-3" style="margin-top: 14px;">
+        <div class="card">
+          <div class="metric-value">17.4k+</div>
+          <div class="metric-label">Verified Tech Records Analyzed</div>
+          <p style="margin-top: 6px;">Continuous ingestion from major Indian hiring hubs (Bengaluru, Hyderabad, Pune, NCR).</p>
+        </div>
+        <div class="card">
+          <div class="metric-value">88.6%</div>
+          <div class="metric-label">Career Trajectory ML Accuracy</div>
+          <p style="margin-top: 6px;">Supervised models predicting salary-hike probability from core technical proficiencies.</p>
+        </div>
+        <div class="card">
+          <div class="metric-value">0–100</div>
+          <div class="metric-label">Explainable SkillPulse™ Engine</div>
+          <p style="margin-top: 6px;">Transparent formula linking demand, versatility, and ₹ LPA baseline uplift.</p>
+        </div>
+      </div>
+
+      <div class="speaker-note-box">
+        <strong>Speaker Talking Point:</strong>
+        "Good morning. We are building AROHA. The Indian tech ecosystem employs over 5.4 million engineers, yet both talent and enterprises evaluate capability using 20-year-old, rear-view-mirror methods. AROHA is the objective valuation and intelligence infrastructure connecting what skills are learned to what they are actually worth in the market."
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 2 ================= -->
+    <div class="slide" id="slide-2">
+      <div class="slide-title-block">
+        <div class="slide-category">02 / Problem Statement</div>
+        <h2 class="slide-heading">The Trillion-Dollar Disconnect in <span>Technical Talent</span></h2>
+        <p class="slide-subheading">Why talent is confused, EdTech is conflicted, and enterprises are flying blind during the AI shift.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card card-problem">
+          <h4 style="color: #f87171;">1. The Rear-View Mirror</h4>
+          <p><strong>Salary Portals (AmbitionBox, Levels.fyi):</strong> Only show what people earned in the past. They cannot value current skills or simulate how upskilling changes compensation.</p>
+        </div>
+        <div class="card card-problem">
+          <h4 style="color: #f87171;">2. The Incentive Conflict</h4>
+          <p><strong>EdTech Giants (Scaler, UpGrad):</strong> Diagnose skill gaps solely to sell ₹1.5L–₹3L bootcamps. Course completion certificates carry zero quantifiable market value.</p>
+        </div>
+        <div class="card card-problem">
+          <h4 style="color: #f87171;">3. The Enterprise Blind Spot</h4>
+          <p><strong>Global Capability Centers (GCCs):</strong> Spending millions reskilling thousands of engineers into AI with zero mathematical proof of market-ready capability.</p>
+        </div>
+      </div>
+
+      <div class="speaker-note-box">
+        <strong>Speaker Talking Point:</strong>
+        "Right now, an engineer wanting to know what their skills are worth has two broken options: look at outdated crowd-sourced salary averages, or take an assessment from an EdTech company whose only goal is to sell them an expensive course. For enterprise leaders, it's worse—they are spending millions reskilling thousands of engineers into AI, with zero mathematical proof of market capability. This is the disconnect AROHA solves."
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 3 ================= -->
+    <div class="slide" id="slide-3">
+      <div class="slide-title-block">
+        <div class="slide-category">03 / The Product Experience</div>
+        <h2 class="slide-heading">The <span>3-Step Valuation Journey</span>: Input to Quantified ROI</h2>
+        <p class="slide-subheading">How candidates and enterprises experience AROHA: Replacing speculation with mathematical clarity.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card card-solution">
+          <div style="font-size: 0.75rem; font-weight: 700; color: #38bdf8; text-transform: uppercase; margin-bottom: 6px;">STEP 1 • INPUT</div>
+          <h4 style="color: #38bdf8; margin-bottom: 8px;">Profile & Goal Ingestion</h4>
+          <p><strong>User Action:</strong> Submits skills (e.g. <code>Python, SQL, Pandas</code>) and target aspiration (e.g. <em>Data Scientist</em>).</p>
+          <p style="margin-top: 8px; font-size: 0.85rem; color: #94a3b8;">• Air-gapped NLP canonicalizer resolves 1,200+ raw aliases in milliseconds.<br>• Zero external LLM cost or data leakage.</p>
+        </div>
+
+        <div class="card card-solution">
+          <div style="font-size: 0.75rem; font-weight: 700; color: #a855f7; text-transform: uppercase; margin-bottom: 6px;">STEP 2 • PROCESSING</div>
+          <h4 style="color: #c084fc; margin-bottom: 8px;">Benchmark & ML Scoring</h4>
+          <p><strong>Engine Action:</strong> Evaluates skill vector against 17,400+ active job postings & compensation curves.</p>
+          <p style="margin-top: 8px; font-size: 0.85rem; color: #94a3b8;">• Executes SkillPulse™ Formula (Demand, Versatility, Salary, Frontier).<br>• Supervised ML predicts salary-hike probability (<strong>88.6%</strong> accuracy).</p>
+        </div>
+
+        <div class="card card-solution">
+          <div style="font-size: 0.75rem; font-weight: 700; color: #34d399; text-transform: uppercase; margin-bottom: 6px;">STEP 3 • OUTPUT</div>
+          <h4 style="color: #34d399; margin-bottom: 8px;">Actionable Valuation & ROI</h4>
+          <p><strong>User Result:</strong> Receives an unbundled, course-free mathematical growth roadmap.</p>
+          <p style="margin-top: 8px; font-size: 0.85rem; color: #94a3b8;">• <strong>SkillPulse™ Score:</strong> 0–100 market index.<br>• <strong>Valuation Card:</strong> Current market worth (₹14.2 LPA).<br>• <strong>Top-ROI Radar:</strong> Prioritized next skills (e.g. +₹4.5L for Statistics).</p>
+        </div>
+      </div>
+
+      <div class="speaker-note-box">
+        <strong>Speaker Talking Point:</strong>
+        "Here is how the product actually works in 3 simple steps: First, an engineer or enterprise HR uploads their current skills—say, Python and SQL—and selects a target role. Our NLP pipeline canonicalizes those skills in milliseconds without expensive LLM API calls. Second, our engine cross-references their profile against 17,400+ active job postings and computes their SkillPulse score from 0 to 100. Third, instead of selling them a ₹2 Lakh course, we output pure mathematical truth: their current market valuation, their hike probability, and the exact top 3 skills that will increase their salary the fastest."
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 4 ================= -->
+    <div class="slide" id="slide-4">
+      <div class="slide-title-block">
+        <div class="slide-category">04 / Core Product Modules</div>
+        <h2 class="slide-heading">Four Core Engines Driving <span>B2C & B2B Value</span></h2>
+        <p class="slide-subheading">A modular architecture serving individual career navigation and enterprise workforce audits.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h4 style="color: #38bdf8;">1. SkillPulse™ Valuation Card ("The CIBIL for Tech")</h4>
+          <p>A single, auditable 0–100 index measuring true technical capability against active hiring market demand. Separates observed facts from predictive ML outputs for enterprise compensation trust.</p>
+        </div>
+
+        <div class="card">
+          <h4 style="color: #34d399;">2. Interactive "What-If" Salary Simulator</h4>
+          <p>Engineers toggle skills (e.g. +PyTorch, +Docker) to simulate instant compensation curve shifts across 5 experience levels (₹3.8L to ₹26.2L+ LPA), answering: <em>'If I learn this, what is my upside?'</em></p>
+        </div>
+
+        <div class="card">
+          <h4 style="color: #c084fc;">3. Dynamic Skill Gap & Trajectory Radar</h4>
+          <p>Ranks missing competencies by direct salary ROI and prerequisite difficulty. Proves that foundational math and statistics (+1.398 LR coefficient) drive 3.2x higher salary boost than pure syntax.</p>
+        </div>
+
+        <div class="card">
+          <h4 style="color: #fbbf24;">4. Enterprise Workforce Skill Health Audit</h4>
+          <p>B2B SaaS module for GCCs and IT services: generates org-wide talent heatmaps, pinpoints team-level AI/Cloud readiness deficits, and calculates empirical return on investment for L&D budgets.</p>
+        </div>
+      </div>
+
+      <div class="speaker-note-box">
+        <strong>Speaker Talking Point:</strong>
+        "AROHA is built on 4 core modules. Module 1 is the SkillPulse Valuation Card—think of it as the CIBIL score for engineering capability. Module 2 is our 'What-If' Salary Simulator: an engineer toggles skills and instantly sees their compensation curve shift. Module 3 is our Skill Gap Radar, which gives them an empirical roadmap showing that learning Statistics yields a 3.2x higher salary boost than learning another web framework. And Module 4 is our high-ACV enterprise engine: Global Capability Centers use our audit heatmaps to evaluate thousands of engineers and measure real reskilling ROI."
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 5 ================= -->
+    <div class="slide" id="slide-5">
+      <div class="slide-title-block">
+        <div class="slide-category">05 / Market Opportunity</div>
+        <h2 class="slide-heading">A <span>$1.8B Indian Tech Market</span> Driven by AI Disruption</h2>
+        <p class="slide-subheading">Accelerated by the explosion of Global Capability Centers (GCCs) and AI reskilling mandates.</p>
+      </div>
+
+      <div class="grid-3" style="margin-top: 10px;">
+        <div class="card">
+          <div class="metric-value">$6.2B</div>
+          <div class="metric-label">TAM — Global Workforce Intelligence</div>
+          <p style="margin-top: 6px;">Workforce analytics & talent intelligence growing at 16.4% CAGR.</p>
+        </div>
+        <div class="card">
+          <div class="metric-value">$1.8B</div>
+          <div class="metric-label">SAM — Indian Tech Workforce & Reskilling</div>
+          <p style="margin-top: 6px;">5.4M+ IT professionals; 1,580+ GCCs undergoing mandatory AI transformation.</p>
+        </div>
+        <div class="card">
+          <div class="metric-value">$120M</div>
+          <div class="metric-label">SOM — Beachhead Market (Year 1–3)</div>
+          <p style="margin-top: 6px;">Data Science, AI/ML, and Cloud engineering talent pools across tier-1 Indian hubs.</p>
+        </div>
+      </div>
+
+      <div class="speaker-note-box">
+        <strong>Speaker Talking Point:</strong>
+        "The timing couldn't be better. India's GCC ecosystem is expanding rapidly, and every single technology company is facing an urgent mandate: transition legacy software engineers into AI and MLOps. Our initial beachhead is the Indian data science and cloud engineering workforce—a $120M immediate opportunity, scaling into the broader $1.8B digital talent ecosystem."
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 6 ================= -->
+    <div class="slide" id="slide-6">
+      <div class="slide-title-block">
+        <div class="slide-category">06 / Business Model</div>
+        <h2 class="slide-heading">Three Diversified <span>High-Margin</span> Revenue Streams</h2>
+        <p class="slide-subheading">Balancing steady enterprise SaaS contracts with high-volume API data licensing and B2C freemium.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <span style="font-size: 0.72rem; font-weight: 700; color: #38bdf8; text-transform: uppercase;">Primary Revenue</span>
+          <h4 style="margin-top: 4px;">B2B Enterprise SaaS</h4>
+          <p>Workforce skill health audits, internal mobility benchmarks, and upskilling ROI dashboards for GCCs and IT enterprises.</p>
+          <div style="margin-top: 12px; font-weight: 700; color: #ffffff;">₹5L – ₹25L / year ACV</div>
+        </div>
+
+        <div class="card">
+          <span style="font-size: 0.72rem; font-weight: 700; color: #34d399; text-transform: uppercase;">Platform Scale</span>
+          <h4 style="margin-top: 4px;">API Data Licensing</h4>
+          <p>Usage-based API integration for recruitment networks (Cutshort, AmbitionBox) and ATS platforms to power automated candidate gap scoring.</p>
+          <div style="margin-top: 12px; font-weight: 700; color: #ffffff;">Usage-Based / Retainers</div>
+        </div>
+
+        <div class="card">
+          <span style="font-size: 0.72rem; font-weight: 700; color: #c084fc; text-transform: uppercase;">Direct to Consumer</span>
+          <h4 style="margin-top: 4px;">B2C Career Copilot</h4>
+          <p>Freemium model for engineers. Free public skill metrics; Pro tier unlocks individualized salary-hike simulators and roadmaps.</p>
+          <div style="margin-top: 12px; font-weight: 700; color: #ffffff;">₹499 – ₹999 / month</div>
+        </div>
+      </div>
+
+      <div class="speaker-note-box">
+        <strong>Speaker Talking Point:</strong>
+        "We monetize through a high-margin enterprise SaaS model selling workforce intelligence to GCCs and IT enterprises, complemented by high-volume API licensing to job portals, and a high-converting B2C freemium tier for ambitious engineers looking to negotiate higher compensation."
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 7 ================= -->
+    <div class="slide" id="slide-7">
+      <div class="slide-title-block">
+        <div class="slide-category">07 / Competitive Moats</div>
+        <h2 class="slide-heading">The Only <span>Objective & Explainable</span> Intelligence Layer</h2>
+        <p class="slide-subheading">How AROHA fundamentally beats incumbent portals and course sellers.</p>
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Salary Portals (AmbitionBox)</th>
+            <th>EdTech Platforms (Scaler)</th>
+            <th>Enterprise SaaS (Eightfold)</th>
+            <th class="highlight-cell">AROHA Engine</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Skill Valuation</strong></td>
+            <td>❌ Job titles only</td>
+            <td>❌ Unverified badges</td>
+            <td>⚠️ Proprietary / Opaque</td>
+            <td class="highlight-cell">✅ Explainable 0–100 Formula</td>
+          </tr>
+          <tr>
+            <td><strong>Salary Trajectory</strong></td>
+            <td>❌ Rear-view mirror</td>
+            <td>❌ Marketing gimmicks</td>
+            <td>⚠️ Internal only</td>
+            <td class="highlight-cell">✅ Supervised ML (88.6% Acc)</td>
+          </tr>
+          <tr>
+            <td><strong>Commercial Neutrality</strong></td>
+            <td>⚠️ Ad-supported</td>
+            <td>❌ Biased (Sells courses)</td>
+            <td>✅ Enterprise software</td>
+            <td class="highlight-cell">✅ 100% Neutral Truth Layer</td>
+          </tr>
+          <tr>
+            <td><strong>Deployment Speed</strong></td>
+            <td>Consumer web only</td>
+            <td>Individual paywall</td>
+            <td>6–12 month rollout</td>
+            <td class="highlight-cell">✅ Plug & Play REST API</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="speaker-note-box">
+        <strong>Speaker Talking Point:</strong>
+        "AmbitionBox shows where people were. Scaler shows what they want to sell you. Eightfold is an expensive black box. AROHA is the neutral, transparent GPS that sits in the middle as the single source of truth for skill value."
+      </div>
+    </div>
+
+    <!-- ================= SLIDE 8 ================= -->
+    <div class="slide" id="slide-8">
+      <div class="slide-title-block">
+        <div class="slide-category">08 / The Ask & Roadmap</div>
+        <h2 class="slide-heading">Raising <span>$600k (₹5 Crore)</span> for 18-Month Runway</h2>
+        <p class="slide-subheading">Capitalizing on our validated ML architecture to achieve critical market scale.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h4>Use of Funds</h4>
+          <ul style="padding-left: 20px; color: #94a3b8; font-size: 0.88rem; line-height: 1.8;">
+            <li><strong>50% Engineering & ML:</strong> Expand data scrapers to 500k+ records and automate continuous model retraining pipelines.</li>
+            <li><strong>30% Enterprise GTM & Alliances:</strong> Pilot integrations with 2 major hiring networks and 15+ GCC design partners.</li>
+            <li><strong>20% Operations & Security:</strong> Enterprise data compliance and research.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h4>18-Month Key Milestones</h4>
+          <ul style="padding-left: 20px; color: #94a3b8; font-size: 0.88rem; line-height: 1.8;">
+            <li><strong>Months 1–6:</strong> Ingest 500,000+ job records; launch live API integration with 2 talent platforms.</li>
+            <li><strong>Months 7–12:</strong> Sign 20+ paying GCC enterprise pilots; reach 75,000 active users.</li>
+            <li><strong>Months 13–18:</strong> Achieve ₹3.5 Crore ($420k) ARR; prepare for Series A round.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-note-box">
+        <strong>Speaker Talking Point:</strong>
+        "We are raising $600k to expand our data ingestion to over 500,000 records, partner with 2 major tech talent marketplaces, and sign our first 20 enterprise GCC customers. We already have a working, tested product and validated machine learning models. We invite you to join us in building India's definitive talent intelligence infrastructure. Thank you."
+      </div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="controls-bar">
+      <div style="font-size: 0.8rem; color: #64748b;">
+        Use <strong>← / →</strong> Arrow keys to navigate
+      </div>
+      <div class="nav-buttons">
+        <button class="btn" id="btn-prev" onclick="prevSlide()" disabled>← Previous</button>
+        <button class="btn btn-primary" id="btn-next" onclick="nextSlide()">Next Slide →</button>
+        <button class="btn btn-pdf" onclick="window.print()">Print / Export PDF</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 8;
+
+    function updateSlide() {
+      for (let i = 1; i <= totalSlides; i++) {
+        const slide = document.getElementById(`slide-${i}`);
+        if (slide) slide.classList.toggle('active', i === currentSlide);
+      }
+      document.getElementById('slide-indicator').innerText = `Slide ${currentSlide} of ${totalSlides}`;
+      document.getElementById('btn-prev').disabled = currentSlide === 1;
+      document.getElementById('btn-next').disabled = currentSlide === totalSlides;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>

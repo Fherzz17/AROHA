@@ -25,12 +25,13 @@ from services.success_models import success_service, JDS_FEATURE_LABELS, SDS_FEA
 from services.recommender import generate_personalized_recommendations
 from services.analytics import get_executive_dashboard_kpis, get_emerging_skills_catalog
 from services.skill_extraction import extract_skills_from_text, normalize_skill_name
+from services.job_matching import job_matcher, generate_job_links
 from utils.constants import TARGET_ROLES, ROLE_SKILL_PROFILES
 
 # ----------------- Page Configuration ----------------- #
 st.set_page_config(
     page_title="AROHA | AI Workforce & Skill Intelligence",
-    page_icon="⚡",
+    page_icon=None,
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -287,14 +288,15 @@ with st.sidebar:
     nav_selection = st.radio(
         "Platform Modules:",
         [
-            "📊 Dashboard",
-            "🔍 Skills & AROHA Score",
-            "🧭 Career Explorer",
-            "💼 Market Intelligence",
-            "🎯 Success Intelligence (ML)",
-            "🚀 Emerging Signals",
-            "🧠 Skill Gap & Roadmap",
-            "ℹ️ Data Quality & Pipeline Audit"
+            "Dashboard",
+            "Resume Job Matcher (AI Openings)",
+            "Skills & AROHA Score",
+            "Career Explorer",
+            "Market Intelligence",
+            "Success Intelligence (ML)",
+            "Emerging Signals",
+            "Skill Gap & Roadmap",
+            "Data Quality & Pipeline Audit"
         ],
         index=0
     )
@@ -332,7 +334,7 @@ def format_plotly_chart(fig):
 # ========================================================================= #
 # 1. DASHBOARD
 # ========================================================================= #
-if nav_selection == "📊 Dashboard":
+if nav_selection == "Dashboard":
     st.markdown("""
     <div class="top-header-banner">
         <div class="top-header-titles">
@@ -446,9 +448,173 @@ if nav_selection == "📊 Dashboard":
         """, unsafe_allow_html=True)
 
 # ========================================================================= #
+# 1.5. RESUME JOB MATCHER (AI OPENINGS)
+# ========================================================================= #
+elif nav_selection == "Resume Job Matcher (AI Openings)":
+    from backend import database
+    st.markdown("""
+    <div class="top-header-banner">
+        <div class="top-header-titles">
+            <h1>AI Resume Job Matcher & Real-Time Openings</h1>
+            <div class="top-header-tagline">
+                Upload your resume to discover active tech openings matching your skill profile, evaluate multi-factor fit scores, and apply directly via live portal links.
+            </div>
+        </div>
+        <div>
+            <span class="data-badge-model">[ML MATCHING MODEL]</span>
+            <span class="data-badge-observed">[LIVE PORTAL LINKS]</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="sas-callout">
+        <strong>Intelligent Opportunity Discovery:</strong> Evaluates your resume against 1,800+ benchmark Indian tech job postings, computing multi-factor fit across technical skills overlap (45%), semantic TF-IDF cosine affinity (30%), role alignment (15%), and experience calibration (10%).
+    </div>
+    """, unsafe_allow_html=True)
+
+    input_mode = st.radio("Choose Resume Input Mode:", ["Upload Resume File (PDF, DOCX, TXT)", "Paste Resume Text", "Load Quick Demo Profiles"], horizontal=True)
+
+    resume_text = ""
+
+    if input_mode == "Upload Resume File (PDF, DOCX, TXT)":
+        uploaded_file = st.file_uploader("Upload candidate resume", type=["pdf", "docx", "txt"])
+        if uploaded_file is not None:
+            bytes_data = uploaded_file.read()
+            try:
+                resume_text = job_matcher.extract_resume_text(bytes_data, uploaded_file.name)
+            except Exception as e:
+                st.error(f"Failed to read file: {e}")
+    elif input_mode == "Paste Resume Text":
+        resume_text = st.text_area("Paste resume text or candidate bio:", height=180, placeholder="Paste resume text containing technical skills, projects, and work experience...")
+    else:
+        sample_choice = st.selectbox("Select a benchmark sample profile:", [
+            "Data Analyst (Python, SQL, Tableau, Power BI - 3 yrs)",
+            "Senior Data Scientist (Python, ML, Scikit-learn, AWS - 5 yrs)",
+            "AI/ML Engineer (PyTorch, TensorFlow, MLOps, Docker - 4 yrs)",
+            "Fullstack Developer (React, Node.js, Python, MongoDB - 4 yrs)"
+        ])
+        sample_map = {
+            "Data Analyst (Python, SQL, Tableau, Power BI - 3 yrs)": (
+                "Priya Sharma\nData Analyst\nExperience: 3 years in business intelligence and data analytics.\n"
+                "Core Skills: Python, SQL, Tableau, Power BI, Excel, Pandas, Statistics, Data Analysis.\n"
+                "Projects:\n- Designed automated sales dashboards in Power BI and SQL.\n- Performed churn analysis and cohort segmentation using Python and Pandas."
+            ),
+            "Senior Data Scientist (Python, ML, Scikit-learn, AWS - 5 yrs)": (
+                "Aarav Mehta\nSenior Data Scientist\nExperience: 5+ years building predictive models and ML pipelines.\n"
+                "Skills: Python, Machine Learning, Scikit-learn, SQL, Pandas, Deep Learning, TensorFlow, AWS, Statistics.\n"
+                "Experience:\n- Built production churn and LTV predictive models with 89% precision.\n- Orchestrated model retraining and deployments on AWS cloud."
+            ),
+            "AI/ML Engineer (PyTorch, TensorFlow, MLOps, Docker - 4 yrs)": (
+                "Rohan Verma\nAI/ML Engineer\nExperience: 4 years designing deep learning architectures and LLM solutions.\n"
+                "Skills: Python, PyTorch, TensorFlow, Machine Learning, Deep Learning, MLOps, Docker, Kubernetes, Git, AWS.\n"
+                "Experience:\n- Fine-tuned transformer models and deployed inference microservices using Docker & Kubernetes."
+            ),
+            "Fullstack Developer (React, Node.js, Python, MongoDB - 4 yrs)": (
+                "Ananya Iyer\nFullstack Software Developer\nExperience: 4 years building scalable web platforms.\n"
+                "Skills: JavaScript, React, Node.js, Python, MongoDB, REST APIs, Git, Docker, SQL.\n"
+                "Experience:\n- Architected high-traffic microservices handling 2M+ daily requests using Node.js, React, and MongoDB."
+            )
+        }
+        resume_text = sample_map[sample_choice]
+
+    # Filters row
+    fcol1, fcol2, fcol3 = st.columns([1.5, 1.5, 1])
+    with fcol1:
+        filter_role = st.selectbox("Target Role Filter:", ["All Roles"] + TARGET_ROLES)
+    with fcol2:
+        locations_list = database.get_unique_locations()
+        filter_loc = st.selectbox("Location Filter:", ["All Tech Hubs"] + locations_list)
+    with fcol3:
+        min_score = st.slider("Min Match Score (%):", min_value=20, max_value=90, value=40, step=5)
+
+    if resume_text and len(resume_text.strip()) > 15:
+        match_role = None if filter_role == "All Roles" else filter_role
+        match_loc = None if filter_loc == "All Tech Hubs" else filter_loc
+
+        match_results = job_matcher.match_resume(
+            resume_text=resume_text,
+            target_role=match_role,
+            location_filter=match_loc,
+            min_score=float(min_score),
+            limit=25
+        )
+
+        cand_profile = match_results["candidate_profile"]
+
+        # Candidate Profile KPI Bar
+        st.markdown("### Parsed Candidate Profile")
+        kpi_c1, kpi_c2, kpi_c3, kpi_c4 = st.columns(4)
+        kpi_c1.metric("Skills Identified", cand_profile["raw_count"])
+        kpi_c2.metric("Estimated Experience", f"{cand_profile['estimated_experience_years']}+ yrs")
+        kpi_c3.metric("Seniority Tier", cand_profile["experience_tier"])
+        top_role_txt = cand_profile["top_predicted_roles"][0]["role"] if cand_profile["top_predicted_roles"] else "Tech Professional"
+        kpi_c4.metric("Top Aligned Role", top_role_txt)
+
+        # Extracted Skills Pills
+        skills_html = "".join([f'<span style="background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.4); color: #c7d2fe; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; margin: 3px; display: inline-block;">{s}</span>' for s in cand_profile["extracted_skills"]])
+        st.markdown(f"**Detected Technical Skills:**<div style='margin-top: 6px; margin-bottom: 20px;'>{skills_html}</div>", unsafe_allow_html=True)
+
+        st.markdown(f"### Recommended Job Openings ({len(match_results['jobs'])} Matching)")
+        st.caption("Direct external links to apply or view postings on LinkedIn, Naukri, and Google Jobs.")
+
+        if not match_results["jobs"]:
+            st.warning("No job openings match your current filter parameters. Try lowering the minimum match score or clearing location filters.")
+        else:
+            for job in match_results["jobs"]:
+                score_color = "#34d399" if job["match_score"] >= 85 else ("#22d3ee" if job["match_score"] >= 70 else "#fbbf24")
+                matched_skills_html = "".join([f'<span style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; padding: 3px 8px; border-radius: 5px; font-size: 0.78rem; margin: 2px; display: inline-block;">{s}</span>' for s in job["matched_skills"]])
+                missing_skills_html = "".join([f'<span style="background: rgba(255, 255, 255, 0.04); border: 1px dashed rgba(255, 255, 255, 0.15); color: #94a3b8; padding: 3px 8px; border-radius: 5px; font-size: 0.78rem; margin: 2px; display: inline-block;">+ {s}</span>' for s in job["missing_skills"][:4]])
+
+                st.markdown(f"""
+                <div style="background: rgba(24, 34, 53, 0.85); border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid {score_color}; border-radius: 12px; padding: 18px 22px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <h3 style="margin: 0; color: #ffffff; font-size: 1.2rem;">{job['job_title']}</h3>
+                            <div style="color: #38bdf8; font-size: 0.92rem; font-weight: 600; margin-top: 2px;">
+                                {job['company']} &bull; <span style="color: #94a3b8;">{job['industry']}</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="background: rgba(255,255,255,0.06); border: 1px solid {score_color}; color: {score_color}; font-weight: 800; font-size: 0.95rem; padding: 5px 12px; border-radius: 999px;">
+                                {job['match_score']}% Match
+                            </span>
+                            <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 4px; text-transform: uppercase; font-weight: 700;">{job['match_tier']}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; font-size: 0.82rem; color: #cbd5e1;">
+                        <span><strong>Location:</strong> {job['location']}</span>
+                        <span><strong>Experience:</strong> {job['experience_label']}</span>
+                        <span style="color: #34d399;"><strong>Compensation:</strong> {job['salary_display']}</span>
+                        <span><strong>Fit:</strong> {job['skills_match_ratio']}</span>
+                    </div>
+                    <div style="margin-top: 12px;">
+                        <span style="font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Skills Match:</span>
+                        <div style="margin-top: 4px;">{matched_skills_html} {missing_skills_html}</div>
+                    </div>
+                    <p style="color: #cbd5e1; font-size: 0.86rem; line-height: 1.5; margin-top: 10px; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
+                        {job['description']}
+                    </p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06);">
+                        <a href="{job['links']['apply_url']}" target="_blank" style="background: #0a66c2; color: #ffffff; padding: 7px 16px; border-radius: 6px; text-decoration: none; font-size: 0.84rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                            Apply on LinkedIn ↗
+                        </a>
+                        <a href="{job['links']['naukri_url']}" target="_blank" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 7px 14px; border-radius: 6px; text-decoration: none; font-size: 0.82rem; font-weight: 600;">
+                            View on Naukri ↗
+                        </a>
+                        <a href="{job['links']['google_jobs_url']}" target="_blank" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 7px 14px; border-radius: 6px; text-decoration: none; font-size: 0.82rem; font-weight: 600;">
+                            Google Jobs ↗
+                        </a>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+    else:
+        st.info("Upload your resume file or pick a sample profile above to see matched job openings with direct application links.")
+
+# ========================================================================= #
 # 2. SKILLS & AROHA SCORE
 # ========================================================================= #
-elif nav_selection == "🔍 Skills & AROHA Score":
+elif nav_selection == "Skills & AROHA Score":
     st.markdown("""
     <div class="top-header-banner">
         <div class="top-header-titles">
@@ -539,7 +705,7 @@ elif nav_selection == "🔍 Skills & AROHA Score":
         st.plotly_chart(fig_bars, use_container_width=True)
 
     # Detailed Methodology Accordion
-    with st.expander("ℹ️ How is this AROHA Score calculated? (Transparent Methodology)"):
+    with st.expander("How is this AROHA Score calculated? (Transparent Methodology)"):
         st.markdown(f"""
         **Mathematical Specification:**
         $$\\text{{AROHA Score}} = 0.35 \\times \\text{{Demand}} + 0.25 \\times \\text{{Role Coverage}} + 0.25 \\times \\text{{Salary Signal}} + 0.15 \\times \\text{{Emerging Signal}}$$
@@ -556,7 +722,7 @@ elif nav_selection == "🔍 Skills & AROHA Score":
 # ========================================================================= #
 # 3. CAREER EXPLORER
 # ========================================================================= #
-elif nav_selection == "🧭 Career Explorer":
+elif nav_selection == "Career Explorer":
     st.markdown("""
     <div class="top-header-banner">
         <div class="top-header-titles">
@@ -607,7 +773,7 @@ elif nav_selection == "🧭 Career Explorer":
 
     col_core, col_comp, col_emerg = st.columns(3)
     with col_core:
-        st.markdown("### ★ Core Skills Baseline")
+        st.markdown("### Core Skills Baseline")
         st.caption("Must-have prerequisites in over 60% of postings")
         for s in profile["core"]:
             sp = calculate_skillpulse_score(s)
@@ -621,7 +787,7 @@ elif nav_selection == "🧭 Career Explorer":
             """, unsafe_allow_html=True)
 
     with col_comp:
-        st.markdown("### 🛠️ Complementary Stacks")
+        st.markdown("### Complementary Stacks")
         st.caption("Differentiating operational competencies")
         for s in profile["complementary"]:
             sp = calculate_skillpulse_score(s)
@@ -635,7 +801,7 @@ elif nav_selection == "🧭 Career Explorer":
             """, unsafe_allow_html=True)
 
     with col_emerg:
-        st.markdown("### ⚡ Emerging Edge")
+        st.markdown("### Emerging Edge")
         st.caption("<span class=\"data-badge-signal\">[FUTURE-FACING]</span> High-leverage frontier skills", unsafe_allow_html=True)
         for s in profile.get("emerging", ["Generative AI"]):
             sp = calculate_skillpulse_score(s)
@@ -651,7 +817,7 @@ elif nav_selection == "🧭 Career Explorer":
 # ========================================================================= #
 # 4. MARKET & SALARY INTELLIGENCE
 # ========================================================================= #
-elif nav_selection == "💼 Market Intelligence":
+elif nav_selection == "Market Intelligence":
     st.markdown("""
     <div class="top-header-banner">
         <div class="top-header-titles">
@@ -667,9 +833,9 @@ elif nav_selection == "💼 Market Intelligence":
     """, unsafe_allow_html=True)
 
     t_sal, t_comp, t_assoc = st.tabs([
-        "💰 Salary vs Experience",
-        "🏢 Company Hiring Intelligence",
-        "📈 Skill-Salary Associations"
+        "Salary vs Experience",
+        "Company Hiring Intelligence",
+        "Skill-Salary Associations"
     ])
 
     with t_sal:
@@ -747,7 +913,7 @@ elif nav_selection == "💼 Market Intelligence":
 # ========================================================================= #
 # 5. CAREER SUCCESS INTELLIGENCE (ML MODULE)
 # ========================================================================= #
-elif nav_selection == "🎯 Success Intelligence (ML)":
+elif nav_selection == "Success Intelligence (ML)":
     st.markdown("""
     <div class="top-header-banner">
         <div class="top-header-titles">
@@ -764,8 +930,8 @@ elif nav_selection == "🎯 Success Intelligence (ML)":
     """, unsafe_allow_html=True)
 
     t_jds, t_sds = st.tabs([
-        "🎓 Junior Data Scientist (JDS) Career Advancement Model",
-        "👔 Senior Data Scientist (SDS) Personality Success Model"
+        "Junior Data Scientist (JDS) Career Advancement Model",
+        "Senior Data Scientist (SDS) Personality Success Model"
     ])
 
     with t_jds:
@@ -879,7 +1045,7 @@ elif nav_selection == "🎯 Success Intelligence (ML)":
 # ========================================================================= #
 # 6. EMERGING SKILL SIGNALS
 # ========================================================================= #
-elif nav_selection == "🚀 Emerging Signals":
+elif nav_selection == "Emerging Signals":
     st.markdown("""
     <div class="top-header-banner">
         <div class="top-header-titles">
@@ -922,7 +1088,7 @@ elif nav_selection == "🚀 Emerging Signals":
 # ========================================================================= #
 # 7. RECOMMENDATIONS & PERSONALIZED SKILL GAP
 # ========================================================================= #
-elif nav_selection == "🧠 Skill Gap & Roadmap":
+elif nav_selection == "Skill Gap & Roadmap":
     st.markdown("""
     <div class="top-header-banner">
         <div class="top-header-titles">
@@ -1020,7 +1186,7 @@ elif nav_selection == "🧠 Skill Gap & Roadmap":
 # ========================================================================= #
 # 8. ABOUT & DATA QUALITY AUDIT
 # ========================================================================= #
-elif nav_selection == "ℹ️ Data Quality & Pipeline Audit":
+elif nav_selection == "Data Quality & Pipeline Audit":
     st.markdown("""
     <div class="top-header-banner">
         <div class="top-header-titles">

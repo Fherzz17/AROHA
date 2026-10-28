@@ -1,12 +1,10 @@
 """
-Data Service for SkillPulse Bharat (SAS Hackathon Edition)
-Loads, cleans, and standardizes the four core SAS datasets:
+Data Service for AROHA AI Workforce Intelligence Platform
+Loads, cleans, and standardizes the core benchmark datasets:
 1. Analytics Jobs.csv (15,841 postings)
 2. DataScience Jobs.csv (1,602 postings)
 3. JDS Skill Traits.xlsx (139 junior data scientists)
 4. SDS Personality Traits.xlsx (161 senior data scientists)
-
-Team: Syntax Society
 """
 
 import re
